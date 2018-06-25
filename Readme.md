@@ -1,17 +1,12 @@
-# Nuklear
+# Nuklear 中文汉化计划
 
-[![Build Status](https://travis-ci.org/vurtun/nuklear.svg)](https://travis-ci.org/vurtun/nuklear)
+这是 [vurtun/nuklear](https://github.com/vurtun/nuklear) 的中文版本
+包括
+中文文档（未完成）
+源代码注释翻译（未完成）
+中文示例（未完成）
 
-This is a minimal state immediate mode graphical user interface toolkit
-written in ANSI C and licensed under public domain. It was designed as a simple
-embeddable user interface for application and does not have any dependencies,
-a default render backend or OS window and input handling but instead provides a very modular
-library approach by using simple input state for input and draw
-commands describing primitive shapes as output. So instead of providing a
-layered library that tries to abstract over a number of platform and
-render backends it only focuses on the actual UI.
-
-## Features
+## 特色
 
 - Immediate mode graphical user interface toolkit
 - Single header library
@@ -43,7 +38,7 @@ The implementation mode requires to define  the preprocessor macro
 IMPORTANT: Every time you include "nuklear.h" you have to define the same optional flags.
 This is very important not doing it either leads to compiler errors or even worse stack corruptions.
 
-## Gallery
+## 画廊
 
 ![screenshot](https://cloud.githubusercontent.com/assets/8057201/11761525/ae06f0ca-a0c6-11e5-819d-5610b25f6ef4.gif)
 ![screen](https://cloud.githubusercontent.com/assets/8057201/13538240/acd96876-e249-11e5-9547-5ac0b19667a0.png)
@@ -52,7 +47,7 @@ This is very important not doing it either leads to compiler errors or even wors
 ![skinning](https://cloud.githubusercontent.com/assets/8057201/15991632/76494854-30b8-11e6-9555-a69840d0d50b.png)
 ![gamepad](https://cloud.githubusercontent.com/assets/8057201/14902576/339926a8-0d9c-11e6-9fee-a8b73af04473.png)
 
-## Example
+## 示例
 
 ```c
 /* init gui state */
