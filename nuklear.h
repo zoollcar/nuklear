@@ -174,7 +174,7 @@
 /// ## Example 例子
 /// 
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
-/// // init gui state
+/// // 初始化 gui 状态
 /// enum {EASY, HARD};
 /// static int op = EASY;
 /// static float value = 0.6f;
@@ -184,18 +184,18 @@
 /// nk_init_fixed(&ctx, calloc(1, MAX_MEMORY), MAX_MEMORY, &font);
 /// if (nk_begin(&ctx, "Show", nk_rect(50, 50, 220, 220),
 ///     NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE)) {
-///     // fixed widget pixel width
+///     // 固定小部件像素宽度
 ///     nk_layout_row_static(&ctx, 30, 80, 1);
 ///     if (nk_button_label(&ctx, "button")) {
 ///         // event handling
 ///     }
 ///
-///     // fixed widget window ratio width
+///     // 固定小部件宽高比
 ///     nk_layout_row_dynamic(&ctx, 30, 2);
 ///     if (nk_option_label(&ctx, "easy", op == EASY)) op = EASY;
 ///     if (nk_option_label(&ctx, "hard", op == HARD)) op = HARD;
 ///
-///     // custom widget pixel width
+///     // 自定义小部件像素宽度
 ///     nk_layout_row_begin(&ctx, NK_STATIC, 30, 2);
 ///     {
 ///         nk_layout_row_push(&ctx, 50);
@@ -424,7 +424,7 @@ NK_STATIC_ASSERT(sizeof(nk_ptr) >= sizeof(void*));
 
 /* ============================================================================
  *
- *                                  API  !!
+ *                                  API
  *
  * =========================================================================== */
 struct nk_buffer;
@@ -542,7 +542,7 @@ enum nk_symbol_type {
 /// __nk_init_custom__  | Initializes context from two buffers. One for draw commands the other for window/panel/table allocations
 /// __nk_clear__        | 在当前帧的最后调用来初始化和准备下一帧
 /// __nk_free__         | 关闭和释放这个 context 所有的内存
-/// __nk_set_user_data__| Utility 函数 to pass user data to draw command
+/// __nk_set_user_data__| Utility function to pass user data to draw command
  */
 #ifdef NK_INCLUDE_DEFAULT_ALLOCATOR
 /*/// #### nk_init_default
@@ -1978,10 +1978,9 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
 ///
 /// #### Usage 用法
 /// 1.  __nk_layout_row_dynamic__
-///     The easiest layouting 函数 is `nk_layout_row_dynamic`. It provides each
-///     widgets with same horizontal space inside the row and dynamically grows
-///     if the owning window grows in width. So the number of columns dictates
-///     the size of each widget dynamically by formula:
+///     最简单的布局函数是 `nk_layout_row_dynamic`。
+///     它为每个小部件在行内提供相同的水平空间，并在窗口宽度变化时动态变化。
+///     通过公式动态指定每个小部件的大小：
 ///
 ///     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 ///     widget_width = (window_width - padding - spacing) * (1/colum_count)
