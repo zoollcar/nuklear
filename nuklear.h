@@ -23,7 +23,7 @@
 /// 7. 许可协议
 /// 8. 更新日志
 /// 9. 画廊
-/// 10. 感谢部分
+/// 10. 荣誉名单
 ///
 /// ## 关于
 /// This is a minimal state immediate mode graphical user interface toolkit
@@ -511,7 +511,7 @@ enum nk_symbol_type {
  *                                  CONTEXT 环境
  *
  * =============================================================================*/
-/*/// ### 总览
+/*/// ### Context
 /// Context 是主入口 是 nuklear 的核心，它包含所有需要的东西.
 /// Context 被 window, memory, input, style, stack, commands 和 time 管理
 /// 需要别导入到一切 GUI 函数中
@@ -1291,10 +1291,10 @@ NK_API const struct nk_draw_command* nk__draw_next(const struct nk_draw_command*
 #endif
 /* =============================================================================
  *
- *                                  WINDOW 窗口
+ *                                  窗口
  *
  * =============================================================================
-/// ### 总览
+/// ### WINDOW 窗口
 /// Windows 是 nuklear 的主要持久状态，
 /// 它的生命周期取决于在每一帧中被调用，
 /// 所有的小部件都只能加到函数 `nk_begin_xxx` 和 `nk_end` 之间。
@@ -25182,7 +25182,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 #endif /* NK_IMPLEMENTATION */
 
 /*
-/// ## License 许可
+/// ## 许可协议
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~none
 ///    ------------------------------------------------------------------------------
 ///    This software is available under 2 licenses -- choose whichever you prefer.
@@ -25225,7 +25225,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 ///    ------------------------------------------------------------------------------
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-/// ## Changelog 日志
+/// ## 更新日志
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~none
 /// [date][x.yy.zz]-[描述]
 /// -[date]: date on which the change has been pushed
@@ -25503,7 +25503,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 ///                        behavior instead of passing it for every 函数 call.
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-/// ## Gallery
+/// ## 画廊
 /// ![Figure [blue]: Feature overview with blue color styling](https://cloud.githubusercontent.com/assets/8057201/13538240/acd96876-e249-11e5-9547-5ac0b19667a0.png)
 /// ![Figure [red]: Feature overview with red color styling](https://cloud.githubusercontent.com/assets/8057201/13538243/b04acd4c-e249-11e5-8fd2-ad7744a5b446.png)
 /// ![Figure [widgets]: Widget overview](https://cloud.githubusercontent.com/assets/8057201/11282359/3325e3c6-8eff-11e5-86cb-cf02b0596087.png)
@@ -25514,7 +25514,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 /// ![Figure [skinning]: Using skinning in Nuklear](https://cloud.githubusercontent.com/assets/8057201/15991632/76494854-30b8-11e6-9555-a69840d0d50b.png)
 /// ![Figure [bf]: Heavy modified version](https://cloud.githubusercontent.com/assets/8057201/14902576/339926a8-0d9c-11e6-9fee-a8b73af04473.png)
 ///
-/// ## Credits
+/// ## 荣誉名单
 /// Developed by Micha Mettke and every direct or indirect github contributor. 
 ///
 /// Embeds [stb_texedit](https://github.com/nothings/stb/blob/master/stb_textedit.h), [stb_truetype](https://github.com/nothings/stb/blob/master/stb_truetype.h) and [stb_rectpack](https://github.com/nothings/stb/blob/master/stb_rect_pack.h) by Sean Barret (public domain) 
