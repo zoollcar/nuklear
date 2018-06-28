@@ -2569,10 +2569,10 @@ NK_API struct nk_rect nk_layout_space_rect_to_local(struct nk_context*, struct n
 ///     nk_foreach(cmd, &ctx) {
 ///     switch (cmd->type) {
 ///     case NK_COMMAND_LINE:
-///         your_draw_line_函数(...)
+///         your_draw_line_function(...)
 ///         break;
 ///     case NK_COMMAND_RECT
-///         your_draw_rect_函数(...)
+///         your_draw_rect_function(...)
 ///         break;
 ///     case ...:
 ///         // [...]
@@ -3375,7 +3375,7 @@ NK_API nk_flags nk_chart_push(struct nk_context*, float);
 NK_API nk_flags nk_chart_push_slot(struct nk_context*, float, int);
 NK_API void nk_chart_end(struct nk_context*);
 NK_API void nk_plot(struct nk_context*, enum nk_chart_type, const float *values, int count, int offset);
-NK_API void nk_plot_函数(struct nk_context*, enum nk_chart_type, void *userdata, float(*value_getter)(void* user, int index), int count, int offset);
+NK_API void nk_plot_function(struct nk_context*, enum nk_chart_type, void *userdata, float(*value_getter)(void* user, int index), int count, int offset);
 /* =============================================================================
  *
  *                                  POPUP
@@ -24075,7 +24075,7 @@ nk_plot(struct nk_context *ctx, enum nk_chart_type type, const float *values,
     }
 }
 NK_API void
-nk_plot_函数(struct nk_context *ctx, enum nk_chart_type type, void *userdata,
+nk_plot_function(struct nk_context *ctx, enum nk_chart_type type, void *userdata,
     float(*value_getter)(void* user, int index), int count, int offset)
 {
     int i = 0;
@@ -25528,4 +25528,3 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 /// in libraries and brought me to create some of my own. Finally Apoorva Joshi
 /// for his single header file packer.
 */
-
