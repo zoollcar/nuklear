@@ -12,7 +12,7 @@
 ///     3. 依赖部分
 /// 5. 示例部分
 /// 6. API 部分
-///     1. Context 部分
+///     1. Context 上下文
 ///     2. Input 部分
 ///     3. Drawing 部分
 ///     4. Window 部分
@@ -71,13 +71,10 @@
 /// - Can be easily modified to only update on user input instead of frame updates
 ///
 /// ## 用法
-/// This library is self contained in one single header file and can be used either
-/// in header only mode or in implementation mode. The header only mode is used
-/// by default when included and allows including this header in other headers
-/// and does not contain the actual implementation. 
-///
-/// The implementation mode requires to define  the preprocessor macro
-/// NK_IMPLEMENTATION in *one* .c/.cpp file before #includeing this file, e.g.:
+/// 这个库自包含在一个单独的头文件中，
+/// 分为 仅头文件模式 和实现定义模式. 默认使用的是 仅头文件模式
+/// 如果要在包含头文件时包含定义 需要在 #include 前定义一个宏 NK_IMPLEMENTATION
+/// e.g.:
 /// 使用它需要在程序开头定义一个宏和引入一个头文件
 /// 
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~C
@@ -85,30 +82,30 @@
 ///     #include "nuklear.h"
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ///
-/// Also optionally define the symbols listed in the section "OPTIONAL DEFINES"
-/// below in header and implementation mode if you want to use additional 函数ality
+/// 若果要使用其他的函数或对库进行更多的控制
+/// 可以定义下面的 更多标志 中列出的标志
 /// or need more control over the library.
 ///
 /// !!! WARNING
-///     Every time nuklear is included define the same compiler flags. This very important not doing so could lead to compiler errors or even worse stack corruptions.
+///     每次包含nuklear时都应定义相同的编译器标志。这非常重要，否则可能会导致编译错误，甚至堆栈损坏。
 ///
-/// ### 标志部分
-/// Flag                            | 描述
+/// ### 更多标志
+/// 标志                            | 描述
 /// --------------------------------|------------------------------------------
-/// NK_PRIVATE                      | If defined declares all 函数s as static, so they can only be accessed inside the file that contains the implementation
-/// NK_INCLUDE_FIXED_TYPES          | 如果这样，它将包含固定大小和类型头文件`<stdint.h>` ，而不是尝试选择正确的类型。这将可以防止编译器错误
-/// NK_INCLUDE_DEFAULT_ALLOCATOR    | 如果这样，它将包含头文件 `<stdlib.h>` and provide additional 函数s to use this library without caring for memory allocation control and therefore 简化内存管理。
-/// NK_INCLUDE_STANDARD_IO          | 如果这样，它将包含头文件 `<stdio.h>` 并根据文件加载提供附加功能。
-/// NK_INCLUDE_STANDARD_VARARGS     | 如果这样，它将包含头文件 `<stdio.h>` 并根据文件加载提供附加功能。和NK_INCLUDE_STANDARD_IO一样
-/// NK_INCLUDE_VERTEX_BUFFER_OUTPUT | Defining this adds a vertex draw command list backend to this library, which allows you to convert queue commands into vertex draw commands. This is mainly if you need a hardware accessible format for OpenGL, DirectX, Vulkan, Metal,...
+/// NK_PRIVATE                      | 所有的函数将声明为 `static`，也就是只能在本文件中使用 nuklear的函数
+/// NK_INCLUDE_FIXED_TYPES          | 它将包含固定大小和类型头文件`<stdint.h>` ，而不是尝试选择正确的类型。这将可以防止编译器错误
+/// NK_INCLUDE_DEFAULT_ALLOCATOR    | 它将包含头文件 `<stdlib.h>` 简化内存管理。
+/// NK_INCLUDE_STANDARD_IO          | 它将包含头文件 `<stdio.h>` 并根据文件加载提供附加功能。
+/// NK_INCLUDE_STANDARD_VARARGS     | 它将包含头文件 `<stdio.h>` 并根据文件加载提供附加功能。和NK_INCLUDE_STANDARD_IO一样
+/// NK_INCLUDE_VERTEX_BUFFER_OUTPUT | 队列命令转换为顶点绘制命令 Defining this adds a vertex draw command list backend to this library, which allows you to convert queue commands into vertex draw commands. This is mainly if you need a hardware accessible format for OpenGL, DirectX, Vulkan, Metal,...
 /// NK_INCLUDE_FONT_BAKING          | Defining this adds `stb_truetype` and `stb_rect_pack` implementation to this library and provides font baking and rendering. If you already have font handling or do not want to use this font handler you don't have to define it.
-/// NK_INCLUDE_DEFAULT_FONT         | Defining this adds the default font: ProggyClean.ttf into this library which can be loaded into a font atlas and allows using this library without having a truetype font
+/// NK_INCLUDE_DEFAULT_FONT         | 将一个默认字体 ProggyClean.ttf 添加到这个库中，这个在没有truetype字体时使用。
 /// NK_INCLUDE_COMMAND_USERDATA     | Defining this adds a userdata pointer into each command. Can be useful for example if you want to provide custom shaders depending on the used widget. Can be combined with the style structures.
-/// NK_BUTTON_TRIGGER_ON_RELEASE    | Different platforms require button clicks occurring either on buttons being pressed (up to down) or released (down to up). By default this library will react on buttons being pressed, but if you define this it will only trigger if a button is released.
+/// NK_BUTTON_TRIGGER_ON_RELEASE    | 默认情况下这个库会在按钮按下时做出反应，定义这个会在按钮释放时做出反应
 /// NK_ZERO_COMMAND_MEMORY          | Defining this will zero out memory for each drawing command added to a drawing queue (inside nk_command_buffer_push). Zeroing command memory is very useful for fast checking (using memcmp) if command buffers are equal and avoid drawing frames when nothing on screen has changed since previous frame.
 ///
 /// !!! WARNING
-///     The following flags will pull in the standard C library:
+///     以下标志会引入标准C库
 ///     - NK_INCLUDE_DEFAULT_ALLOCATOR
 ///     - NK_INCLUDE_STANDARD_IO
 ///     - NK_INCLUDE_STANDARD_VARARGS
@@ -125,11 +122,11 @@
 ///     - NK_INCLUDE_COMMAND_USERDATA
 ///
 /// ### 常量
-/// Define                          | 描述
+/// 常量                          | 描述
 /// --------------------------------|---------------------------------------
-/// NK_BUFFER_DEFAULT_INITIAL_SIZE  | Initial buffer size allocated by all buffers while using the default allocator 函数s included by defining NK_INCLUDE_DEFAULT_ALLOCATOR. If you don't want to allocate the default 4k memory then redefine it.
-/// NK_MAX_NUMBER_BUFFER            | Maximum buffer size for the conversion buffer between float and string Under normal circumstances this should be more than sufficient.
-/// NK_INPUT_MAX                    | Defines the max number of bytes which can be added as text input in one frame. Under normal circumstances this should be more than sufficient.
+/// NK_BUFFER_DEFAULT_INITIAL_SIZE  | 缓冲区大小，默认是4k Initial buffer size allocated by all buffers while using the default allocator 函数s included by defining NK_INCLUDE_DEFAULT_ALLOCATOR. If you don't want to allocate the default 4k memory then redefine it.
+/// NK_MAX_NUMBER_BUFFER            | float和string之间的转换缓冲区大小，默认是64
+/// NK_INPUT_MAX                    | 一帧中可以添加为文本输入的最大字节数。 默认是16 
 ///
 /// !!! WARNING
 ///     The following constants if defined need to be defined for both header and implementation:
@@ -138,22 +135,22 @@
 ///     - NK_INPUT_MAX
 ///
 /// ### 依赖关系
-//
+///
 
-/ 函数    | 描述
+/// 函数    | 描述
 /// ------------|---------------------------------------------------------------
-/// NK_ASSERT   | If you don't define this, nuklear will use <assert.h> with assert().
-/// NK_MEMSET   | You can define this to 'memset' or your own memset implementation replacement. If not nuklear will use its own version.
-/// NK_MEMCPY   | You can define this to 'memcpy' or your own memcpy implementation replacement. If not nuklear will use its own version.
-/// NK_SQRT     | You can define this to 'sqrt' or your own sqrt implementation replacement. If not nuklear will use its own slow and not highly accurate version.
-/// NK_SIN      | You can define this to 'sinf' or your own sine implementation replacement. If not nuklear will use its own approximation implementation.
-/// NK_COS      | You can define this to 'cosf' or your own cosine implementation replacement. If not nuklear will use its own approximation implementation.
-/// NK_STRTOD   | You can define this to `strtod` or your own string to double conversion implementation replacement. If not defined nuklear will use its own imprecise and possibly unsafe version (does not handle nan or infinity!).
-/// NK_DTOA     | You can define this to `dtoa` or your own double to string conversion implementation replacement. If not defined nuklear will use its own imprecise and possibly unsafe version (does not handle nan or infinity!).
-/// NK_VSNPRINTF| If you define `NK_INCLUDE_STANDARD_VARARGS` as well as `NK_INCLUDE_STANDARD_IO` and want to be safe define this to `vsnprintf` on compilers supporting later versions of C or C++. By default nuklear will check for your stdlib version in C as well as compiler version in C++. if `vsnprintf` is available it will define it to `vsnprintf` directly. If not defined and if you have older versions of C or C++ it will be defined to `vsprintf` which is unsafe.
+/// NK_ASSERT   | 默认情况下 nuklear 会使用 `<assert.h>` 中的 assert().
+/// NK_MEMSET   | 您可以将它定义为 'memset' 或是您自己的版本，否则nuklear将使用它自己的版本。
+/// NK_MEMCPY   | 您可以将其定义为 'memcpy' 或是您自己的版本，否则nuklear将使用它自己的版本。
+/// NK_SQRT     | 您可以将其定义为 'sqrt' 或是您自己的版本，否则nuklear将使用它自己缓慢不精确的版本。
+/// NK_SIN      | 您可以将其定义为 'sinf' 或是您自己的版本，否则nuklear将使用它自己的近似实现。
+/// NK_COS      | 您可以将此定义为 'cosf' 或您自己的余弦函数替换，否则nuklear将使用它自己的近似实现。
+/// NK_STRTOD   | 您可以将此定义为 'strtod' 或您自己的 string to double 转换函数，否则nuklear将使用它自己的不准确，可能也不安全的版本（不处理 nan 和 infinity）。
+/// NK_DTOA     | 您可以将此定义为 'dtoa' 或您自己的 double to string 转换函数，否则nuklear将使用它自己的不准确，可能也不安全的版本（不处理 nan 和 infinity）。
+/// NK_VSNPRINTF| 如果您定义了 `NK_INCLUDE_STANDARD_VARARGS` 或是 `NK_INCLUDE_STANDARD_IO` and want to be safe define this to `vsnprintf` on compilers supporting later versions of C or C++. By default nuklear will check for your stdlib version in C as well as compiler version in C++. if `vsnprintf` is available it will define it to `vsnprintf` directly. If not defined and if you have older versions of C or C++ it will be defined to `vsprintf` which is unsafe.
 ///
 /// !!! WARNING
-///     The following dependencies will pull in the standard C library if not redefined:
+///     以下依赖项将引入标准C库：
 ///     - NK_ASSERT
 ///
 /// !!! WARNING
@@ -508,10 +505,10 @@ enum nk_symbol_type {
 };
 /* =============================================================================
  *
- *                                  CONTEXT 环境
+ *                                  CONTEXT 上下文
  *
  * =============================================================================*/
-/*/// ### Context
+/*/// ### Context 上下文
 /// Context 是主入口 是 nuklear 的核心，它包含所有需要的东西.
 /// Context 被 window, memory, input, style, stack, commands 和 time 管理
 /// 需要别导入到一切 GUI 函数中
@@ -671,8 +668,8 @@ NK_API void nk_set_user_data(struct nk_context*, nk_handle handle);
  *                                  INPUT 输入
  *
  * =============================================================================*/
-/*/// ### Input
-/// The input API 负责保持当前由鼠标、按键和文本输入所组成的输入状态。
+/*/// ### Input 输入
+/// input API 负责保持当前由鼠标、按键和文本输入所组成的输入状态。
 /// nuklear 并没有直接操作窗口句柄或是系统
 /// 所有输入状态都必须由特定于平台的代码提供的。 
 /// This in one hand expects more work from the user and complicates usage but 
@@ -912,7 +909,7 @@ NK_API void nk_input_end(struct nk_context*);
  *                                  DRAWING 绘制
  *
  * =============================================================================*/
-/*/// ### Drawing
+/*/// ### Drawing 绘制
 /// 这个库被设计为推给后端绘制
 /// 所以它不会直接在屏幕上绘制任何图形. 而是绘制形状、小部件等。
 /// 这会缓冲进内存并组成命令队列。
@@ -923,7 +920,7 @@ NK_API void nk_input_end(struct nk_context*);
 /// drawing API and the optional vertex buffer API only takes this format and
 /// converts it into a hardware accessible format.
 ///
-/// #### Usage 用法
+/// #### 用法
 /// 为了绘制每一帧的命令队列，你需要你自己的渲染器
 /// 后端需要能绘制一些2D元素
 /// 这至少包括 填充(filled) 和 绘制 矩形、圆形、文本、线、三角形 和 scissors.
@@ -1938,7 +1935,7 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
  *                                  LAYOUTING 布局
  *
  * =============================================================================
-/// ### Layouting
+/// ### Layouting 布局
 /// Layouting 描述了小部件放置在窗口中的位置和大小。
 /// 在这里，有五个不同的API用于布局，每个API在控制和易用性之间都有不同的权衡。
 ///
@@ -2510,7 +2507,7 @@ NK_API struct nk_rect nk_layout_space_rect_to_local(struct nk_context*, struct n
  *                                  GROUP 组
  *
  * =============================================================================
-/// ### Groups
+/// ### Groups 组
 /// Groups 基本上都是窗口(window)中的窗口。They allow to subdivide space
 /// in a window to layout widgets as a group. Almost all more complex widget
 /// layouting requirements can be solved using groups and basic layouting
@@ -2518,7 +2515,7 @@ NK_API struct nk_rect nk_layout_space_rect_to_local(struct nk_context*, struct n
 /// internally keep track of scrollbar offsets by default. However additional
 /// versions are provided to directly manage the scrollbar.
 ///
-/// #### Usage 用法
+/// #### 用法
 /// To create a group you have to call one of the three `nk_group_begin_xxx`
 /// 函数s to start group declarations and `nk_group_end` at the end. Furthermore it
 /// is required to check the return value of `nk_group_begin_xxx` and only process
@@ -2684,7 +2681,7 @@ NK_API void nk_group_scrolled_end(struct nk_context*);
  *                                  TREE 树
  *
  * ============================================================================= 
-/// ### Tree
+/// ### Tree 树
 /// Trees represent two different concept. First the concept of a collapsable
 /// UI section that can be either in a hidden or visibile state. They allow the UI
 /// user to selectively minimize the current set of visible UI to comprehend.
@@ -3126,7 +3123,7 @@ NK_API int nk_color_pick(struct nk_context*, struct nk_colorf*, enum nk_color_fo
 /// can be achieved by dragging, adding/removing incremental steps on button click
 /// or by directly typing a number.
 ///
-/// #### Usage 用法
+/// #### 用法
 /// Each property requires a unique name for identifaction that is also used for
 /// displaying a label. If you want to use the same name multiple times make sure
 /// add a '#' before your name. The '#' will not be shown but will generate a
