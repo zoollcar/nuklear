@@ -7,37 +7,46 @@
 * [ ] 中文文档（未完成）
 * [ ] 源代码注释翻译（未完成）
 * [ ] 中文示例（未完成）
+
+## 关于 Nuklear
+
+This is a minimal state immediate mode graphical user interface toolkit
+written in ANSI C and licensed under public domain. It was designed as a simple
+embeddable user interface for application and does not have any dependencies,
+a default renderbackend or OS window and input handling but instead provides a very modular
+library approach by using simple input state for input and draw
+commands describing primitive shapes as output. So instead of providing a
+layered library that tries to abstract over a number of platform and
+render backends it only focuses on the actual UI.
+
 ## 特色
 
 - Immediate mode graphical user interface toolkit
 - 单一头文件
 - 使用 C89 (ANSI C) 编写
 - 小文件 (~18kLOC)
-- Focus on portability, efficiency and simplicity
+- 专注于可移植性，效率和简洁
 - 无依赖 (通过设置甚至可以不依赖标准库)
-- Fully skinnable and customizable
+- 完全可定制皮肤
 - Low memory footprint with total memory control if needed or wanted
 - 支持 UTF-8
 - No global or hidden state
-- Customizable library modules (you can compile and use only what you need)
+- 可定制的库模块（您可以只编译和使用您所需要的）
 - Optional font baker and vertex buffer output
 - [中文文档](https://github/zoollcar/nuklear/doc/nuklear.html)
 
-## Building
+## 用法
+这个库自包含在一个单独的头文件中，
+分为 仅头文件模式 和 定义模式. 默认使用的是 仅头文件模式
+如果要在包含头文件的同时包含定义 需要在 #include 前定义一个宏 NK_IMPLEMENTATION
+e.g.:
+使用它需要在程序开头定义一个宏和引入一个头文件
 
-This library is self contained in one single header file and can be used either
-in header only mode or in implementation mode. The header only mode is used
-by default when included and allows including this header in other headers
-and does not contain the actual implementation.
-
-The implementation mode requires to define  the preprocessor macro
-`NK_IMPLEMENTATION` in *one* .c/.cpp file before `#include`ing this file, e.g.:
-```c
-#define NK_IMPLEMENTATION
-#include "nuklear.h"
-```
-IMPORTANT: Every time you include "nuklear.h" you have to define the same optional flags.
-This is very important not doing it either leads to compiler errors or even worse stack corruptions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~C
+    #define NK_IMPLEMENTATION
+    #include "nuklear.h"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+注意: 每次包含nuklear时都应定义相同的编译器标志。这非常重要，否则可能会导致编译错误，甚至堆栈损坏。
 
 ## 画廊
 
