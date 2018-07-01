@@ -35,20 +35,21 @@
 /// layered library that tries to abstract over a number of platform and
 /// render backends it only focuses on the actual UI.
 ///
-/// ## 亮点
-/// - Graphical user interface toolkit
-/// - Single header library
-/// - Written in C89 (a.k.a. ANSI C or ISO C90)
-/// - Small codebase (~18kLOC)
+/// ## 特色
+/// 
+/// - Immediate mode graphical user interface toolkit
+/// - 单一头文件
+/// - 使用 C89 (ANSI C) 编写
+/// - 小文件 (~18kLOC)
 /// - Focus on portability, efficiency and simplicity
-/// - No dependencies (not even the standard library if not wanted)
+/// - 无依赖 (通过设置甚至可以不依赖标准库)
 /// - Fully skinnable and customizable
 /// - Low memory footprint with total memory control if needed or wanted
-/// - UTF-8 support
+/// - 支持 UTF-8
 /// - No global or hidden state
 /// - Customizable library modules (you can compile and use only what you need)
 /// - Optional font baker and vertex buffer output
-///
+/// - [中文文档](https://github/zoollcar/nuklear/doc/nuklear.html)
 /// ## 特色
 /// - Absolutely no platform dependent code
 /// - Memory management control ranging from/to
@@ -208,8 +209,7 @@
 /// ![](https://cloud.githubusercontent.com/assets/8057201/10187981/584ecd68-675c-11e5-897c-822ef534a876.png)
 ///
 /// ## API
-///
-*/
+///*/
 #ifndef NK_SINGLE_FILE
   #define NK_SINGLE_FILE
 #endif
@@ -674,7 +674,7 @@ NK_API void nk_set_user_data(struct nk_context*, nk_handle handle);
 /// 所有输入状态都必须由特定于平台的代码提供的。 
 /// This in one hand expects more work from the user and complicates usage but 
 /// on the other hand provides simple abstraction over a big number of platforms, 
-/// libraries and other already provided 函数ality.
+/// libraries and other already provided functionality.
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// nk_input_begin(&ctx);
@@ -725,7 +725,7 @@ NK_API void nk_set_user_data(struct nk_context*, nk_handle handle);
 /// __nk_input_char__   | 将单个 ASCII 字符添加到内部文本缓冲区中
 /// __nk_input_glyph__  | 将单个多字节UTF-8字符添加到内部文本缓冲区中
 /// __nk_input_unicode__| 将单个 Unicode Rune 添加到内部文本缓冲区中
-/// __nk_input_end__    | 结束建立 Ends the input mirroring process by calculating state changes. Don't call any `nk_input_xxx` 函数 referenced above after this call
+/// __nk_input_end__    | 结束建立 Ends the input mirroring process by calculating state changes. Don't call any `nk_input_xxx` function referenced above after this call
 */
 enum nk_keys {
     NK_KEY_NONE,
@@ -842,7 +842,7 @@ NK_API void nk_input_button(struct nk_context*, enum nk_buttons, int x, int y, i
 NK_API void nk_input_scroll(struct nk_context*, struct nk_vec2 val);
 /*/// #### nk_input_char
 /// Copies a single ASCII character into an internal text buffer
-/// This is basically a helper 函数 to quickly push ASCII characters into
+/// This is basically a helper function to quickly push ASCII characters into
 /// nuklear.
 ///
 /// !!! Note
@@ -1006,10 +1006,10 @@ NK_API void nk_input_end(struct nk_context*);
 ///     nk_foreach(cmd, &ctx) {
 ///     switch (cmd->type) {
 ///     case NK_COMMAND_LINE:
-///         your_draw_line_函数(...)
+///         your_draw_line_function(...)
 ///         break;
 ///     case NK_COMMAND_RECT
-///         your_draw_rect_函数(...)
+///         your_draw_rect_function(...)
 ///         break;
 ///     case ...:
 ///         //[...]
@@ -1052,10 +1052,10 @@ NK_API void nk_input_end(struct nk_context*);
 ///         nk_foreach(cmd, &ctx) {
 ///             switch (cmd->type) {
 ///             case NK_COMMAND_LINE:
-///                 your_draw_line_函数(...)
+///                 your_draw_line_function(...)
 ///                 break;
 ///             case NK_COMMAND_RECT
-///                 your_draw_rect_函数(...)
+///                 your_draw_rect_function(...)
 ///                 break;
 ///             case ...:
 ///                 // [...]
@@ -1219,7 +1219,7 @@ NK_API const struct nk_command* nk__next(struct nk_context*, const struct nk_com
 /// 参数                       | 描述
 /// --------------------------------|-----------------------------------------------------------
 /// NK_CONVERT_SUCCESS              | Signals a successful draw command to vertex buffer conversion
-/// NK_CONVERT_INVALID_PARAM        | An invalid argument was passed in the 函数 call
+/// NK_CONVERT_INVALID_PARAM        | An invalid argument was passed in the function call
 /// NK_CONVERT_COMMAND_BUFFER_FULL  | The provided buffer for storing draw commands is full or failed to allocate more memory
 /// NK_CONVERT_VERTEX_BUFFER_FULL   | The provided buffer for storing vertices is full or failed to allocate more memory
 /// NK_CONVERT_ELEMENT_BUFFER_FULL  | The provided buffer for storing indicies is full or failed to allocate more memory
@@ -1350,10 +1350,10 @@ NK_API const struct nk_draw_command* nk__draw_next(const struct nk_draw_command*
 ///     const struct nk_command *cmd = 0;
 ///     nk_foreach(cmd, &ctx) {
 ///     case NK_COMMAND_LINE:
-///         your_draw_line_函数(...)
+///         your_draw_line_function(...)
 ///         break;
 ///     case NK_COMMAND_RECT
-///         your_draw_rect_函数(...)
+///         your_draw_rect_function(...)
 ///         break;
 ///     case //...:
 ///         //[...]
@@ -1479,7 +1479,7 @@ NK_API int nk_begin(struct nk_context *ctx, const char *title, struct nk_rect bo
 NK_API int nk_begin_titled(struct nk_context *ctx, const char *name, const char *title, struct nk_rect bounds, nk_flags flags);
 /*/// #### nk_end
 /// Needs to be called at the end of the window building process to process scaling, scrollbars and general cleanup.
-/// All widget calls after this 函数s will result in asserts or no state changes
+/// All widget calls after this functions will result in asserts or no state changes
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_end(struct nk_context *ctx);
@@ -1590,7 +1590,7 @@ NK_API float nk_window_get_height(const struct nk_context*);
 ///
 /// Returns the underlying panel which contains all processing state of the current window.
 /// !!! WARNING
-///     Only call this 函数 between calls `nk_begin_xxx` and `nk_end`
+///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 /// !!! WARNING
 ///     Do not keep the returned panel pointer around it is only valid until `nk_end`
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
@@ -1609,7 +1609,7 @@ NK_API struct nk_panel* nk_window_get_panel(struct nk_context*);
 /// Returns the position and size of the currently visible and non-clipped space
 /// inside the currently processed window.
 /// !!! WARNING
-///     Only call this 函数 between calls `nk_begin_xxx` and `nk_end`
+///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// struct nk_rect nk_window_get_content_region(struct nk_context *ctx);
@@ -1628,7 +1628,7 @@ NK_API struct nk_rect nk_window_get_content_region(struct nk_context*);
 /// Returns the upper left position of the currently visible and non-clipped
 /// space inside the currently processed window.
 /// !!! WARNING
-///     Only call this 函数 between calls `nk_begin_xxx` and `nk_end`
+///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// struct nk_vec2 nk_window_get_content_region_min(struct nk_context *ctx);
@@ -1647,7 +1647,7 @@ NK_API struct nk_vec2 nk_window_get_content_region_min(struct nk_context*);
 /// Returns the lower right screen position of the currently visible and
 /// non-clipped space inside the currently processed window.
 /// !!! WARNING
-///     Only call this 函数 between calls `nk_begin_xxx` and `nk_end`
+///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// struct nk_vec2 nk_window_get_content_region_max(struct nk_context *ctx);
@@ -1666,7 +1666,7 @@ NK_API struct nk_vec2 nk_window_get_content_region_max(struct nk_context*);
 /// Returns the size of the currently visible and non-clipped space inside the
 /// currently processed window
 /// !!! WARNING
-///     Only call this 函数 between calls `nk_begin_xxx` and `nk_end`
+///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// struct nk_vec2 nk_window_get_content_region_size(struct nk_context *ctx);
@@ -1682,7 +1682,7 @@ NK_API struct nk_vec2 nk_window_get_content_region_size(struct nk_context*);
 /*/// #### nk_window_get_canvas
 /// Returns the draw command buffer. Can be used to draw custom widgets
 /// !!! WARNING
-///     Only call this 函数 between calls `nk_begin_xxx` and `nk_end`
+///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 /// !!! WARNING
 ///     Do not keep the returned command buffer pointer around it is only valid until `nk_end`
 ///
@@ -1701,7 +1701,7 @@ NK_API struct nk_command_buffer* nk_window_get_canvas(struct nk_context*);
 /*/// #### nk_window_has_focus
 /// Returns if the currently processed window is currently active
 /// !!! WARNING
-///     Only call this 函数 between calls `nk_begin_xxx` and `nk_end`
+///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// int nk_window_has_focus(const struct nk_context *ctx);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1716,7 +1716,7 @@ NK_API int nk_window_has_focus(const struct nk_context*);
 /*/// #### nk_window_is_hovered
 /// Return if the current window is being hovered
 /// !!! WARNING
-///     Only call this 函数 between calls `nk_begin_xxx` and `nk_end`
+///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// int nk_window_is_hovered(struct nk_context *ctx);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1942,13 +1942,13 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
 /// All layouting methods in this library are based around the concept of a row.
 /// A row has a height the window content grows by and a number of columns and each
 /// layouting method specifies how each widget is placed inside the row.
-/// After a row has been allocated by calling a layouting 函数s and then
+/// After a row has been allocated by calling a layouting functions and then
 /// filled with widgets will advance an internal pointer over the allocated row. 
 ///
-/// To actually define a layout you just call the appropriate layouting 函数
+/// To actually define a layout you just call the appropriate layouting function
 /// and each subsequent widget call will place the widget as specified. Important
 /// here is that if you define more widgets then columns defined inside the layout
-/// 函数s it will allocate the next row without you having to make another layouting 
+/// functions it will allocate the next row without you having to make another layouting 
 /// call.
 ///
 /// Biggest limitation with using all these APIs outside the `nk_layout_space_xxx` API
@@ -1971,7 +1971,7 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
 /// layouting method in combination with a cassowary constraint solver (there are
 /// some versions on github with permissive license model) to take over all control over widget
 /// layouting yourself. However for quick and dirty layouting using all the other layouting
-/// 函数s should be fine.
+/// functions should be fine.
 ///
 /// #### Usage 用法
 /// 1.  __nk_layout_row_dynamic__
@@ -2007,7 +2007,7 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
 ///     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ///
 /// 2.  __nk_layout_row_static__
-///     Another easy layouting 函数 is `nk_layout_row_static`. It provides each
+///     Another easy layouting function is `nk_layout_row_static`. It provides each
 ///     widget with same horizontal pixel width inside the row and does not grow
 ///     if the owning window scales smaller or bigger.
 ///
@@ -2031,13 +2031,13 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
 ///     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ///
 /// 3.  __nk_layout_row_xxx__
-///     A little bit more advanced layouting API are 函数s `nk_layout_row_begin`,
+///     A little bit more advanced layouting API are functions `nk_layout_row_begin`,
 ///     `nk_layout_row_push` and `nk_layout_row_end`. They allow to directly
 ///     specify each column pixel or window ratio in a row. It supports either
 ///     directly setting per column pixel width or widget window ratio but not
 ///     both. Furthermore it is a immediate mode API so each value is directly
 ///     pushed before calling a widget. Therefore the layout is not automatically
-///     repeating like the last two layouting 函数s.
+///     repeating like the last two layouting functions.
 ///
 ///     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 ///     if (nk_begin_xxx(...) {
@@ -2070,7 +2070,7 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
 ///
 /// 4.  __nk_layout_row__
 ///     The array counterpart to API nk_layout_row_xxx is the single nk_layout_row
-///     函数s. Instead of pushing either pixel or window ratio for every widget
+///     functions. Instead of pushing either pixel or window ratio for every widget
 ///     it allows to define it by array. The trade of for less control is that
 ///     `nk_layout_row` is automatically repeating. Otherwise the behavior is the
 ///     same.
@@ -2147,7 +2147,7 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
 ///     row auto repeat and directly sets position and size of a widget. Position
 ///     and size hereby can be either specified as ratio of allocated space or
 ///     allocated space local position and pixel size. Since this API is quite
-///     powerful there are a number of utility 函数s to get the available space
+///     powerful there are a number of utility functions to get the available space
 ///     and convert between local allocated space and screen space.
 ///
 ///     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
@@ -2176,7 +2176,7 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
 /// nk_layout_set_min_row_height            | Set the currently used minimum row height to a specified value
 /// nk_layout_reset_min_row_height          | Resets the currently used minimum row height to font height
 /// nk_layout_widget_bounds                 | Calculates current width a static layout row can fit inside a window
-/// nk_layout_ratio_from_pixel              | Utility 函数s to calculate window ratio from pixel size
+/// nk_layout_ratio_from_pixel              | Utility functions to calculate window ratio from pixel size
 //
 /// nk_layout_row_dynamic                   | Current layout is divided into n same sized growing columns
 /// nk_layout_row_static                    | Current layout is divided into n same fixed sized columns
@@ -2229,7 +2229,7 @@ NK_API void nk_layout_set_min_row_height(struct nk_context*, float height);
 */
 NK_API void nk_layout_reset_min_row_height(struct nk_context*);
 /*/// #### nk_layout_widget_bounds
-/// Returns the width of the next row allocate by one of the layouting 函数s
+/// Returns the width of the next row allocate by one of the layouting functions
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// struct nk_rect nk_layout_widget_bounds(struct nk_context*);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2242,7 +2242,7 @@ NK_API void nk_layout_reset_min_row_height(struct nk_context*);
 */
 NK_API struct nk_rect nk_layout_widget_bounds(struct nk_context*);
 /*/// #### nk_layout_ratio_from_pixel
-/// Utility 函数s to calculate window ratio from pixel size
+/// Utility functions to calculate window ratio from pixel size
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// float nk_layout_ratio_from_pixel(struct nk_context*, float pixel_width);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2434,7 +2434,7 @@ NK_API void nk_layout_space_push(struct nk_context*, struct nk_rect bounds);
 */
 NK_API void nk_layout_space_end(struct nk_context*);
 /*/// #### nk_layout_space_bounds
-/// Utility 函数 to calculate total space allocated for `nk_layout_space`
+/// Utility function to calculate total space allocated for `nk_layout_space`
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// struct nk_rect nk_layout_space_bounds(struct nk_context*);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2517,7 +2517,7 @@ NK_API struct nk_rect nk_layout_space_rect_to_local(struct nk_context*, struct n
 ///
 /// #### 用法
 /// To create a group you have to call one of the three `nk_group_begin_xxx`
-/// 函数s to start group declarations and `nk_group_end` at the end. Furthermore it
+/// functions to start group declarations and `nk_group_end` at the end. Furthermore it
 /// is required to check the return value of `nk_group_begin_xxx` and only process
 /// widgets inside the window if the value is not 0.
 /// Nesting groups is possible and even encouraged since many layouting schemes
@@ -2589,7 +2589,7 @@ NK_API struct nk_rect nk_layout_space_rect_to_local(struct nk_context*, struct n
 /// nk_group_scrolled_end           | Ends a group with manual scrollbar handling. Should only be called if nk_group_begin returned non-zero
 */
 /*/// #### nk_group_begin
-/// Starts a new widget group. Requires a previous layouting 函数 to specify a pos/size.
+/// Starts a new widget group. Requires a previous layouting function to specify a pos/size.
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// int nk_group_begin(struct nk_context*, const char *title, nk_flags);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2604,7 +2604,7 @@ NK_API struct nk_rect nk_layout_space_rect_to_local(struct nk_context*, struct n
 */
 NK_API int nk_group_begin(struct nk_context*, const char *title, nk_flags);
 /*/// #### nk_group_begin_titled
-/// Starts a new widget group. Requires a previous layouting 函数 to specify a pos/size.
+/// Starts a new widget group. Requires a previous layouting function to specify a pos/size.
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// int nk_group_begin_titled(struct nk_context*, const char *name, const char *title, nk_flags);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2631,7 +2631,7 @@ NK_API int nk_group_begin_titled(struct nk_context*, const char *name, const cha
 */
 NK_API void nk_group_end(struct nk_context*);
 /*/// #### nk_group_scrolled_offset_begin
-/// starts a new widget group. requires a previous layouting 函数 to specify
+/// starts a new widget group. requires a previous layouting function to specify
 /// a size. Does not keep track of scrollbar.
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// int nk_group_scrolled_offset_begin(struct nk_context*, nk_uint *x_offset, nk_uint *y_offset, const char *title, nk_flags flags);
@@ -2650,7 +2650,7 @@ NK_API void nk_group_end(struct nk_context*);
 NK_API int nk_group_scrolled_offset_begin(struct nk_context*, nk_uint *x_offset, nk_uint *y_offset, const char *title, nk_flags flags);
 /*/// #### nk_group_scrolled_begin
 /// Starts a new widget group. requires a previous
-/// layouting 函数 to specify a size. Does not keep track of scrollbar.
+/// layouting function to specify a size. Does not keep track of scrollbar.
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// int nk_group_scrolled_begin(struct nk_context*, struct nk_scroll *off, const char *title, nk_flags);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2689,32 +2689,32 @@ NK_API void nk_group_scrolled_end(struct nk_context*);
 ///
 /// Trees thereby can be nested for tree representations and multiple nested
 /// collapsable UI sections. All trees are started by calling of the
-/// `nk_tree_xxx_push_tree` 函数s and ended by calling one of the
-/// `nk_tree_xxx_pop_xxx()` 函数s. Each starting 函数s takes a title label
+/// `nk_tree_xxx_push_tree` functions and ended by calling one of the
+/// `nk_tree_xxx_pop_xxx()` functions. Each starting functions takes a title label
 /// and optionally an image to be displayed and the initial collapse state from
 /// the nk_collapse_states section.
 ///
 /// The runtime state of the tree is either stored outside the library by the caller
 /// or inside which requires a unique ID. The unique ID can either be generated
-/// automatically from `__FILE__` and `__LINE__` with 函数 `nk_tree_push`,
+/// automatically from `__FILE__` and `__LINE__` with function `nk_tree_push`,
 /// by `__FILE__` and a user provided ID generated for example by loop index with
-/// 函数 `nk_tree_push_id` or completely provided from outside by user with
-/// 函数 `nk_tree_push_hashed`.
+/// function `nk_tree_push_id` or completely provided from outside by user with
+/// function `nk_tree_push_hashed`.
 ///
 /// #### Usage 用法
 /// To create a tree you have to call one of the seven `nk_tree_xxx_push_xxx`
-/// 函数s to start a collapsable UI section and `nk_tree_xxx_pop` to mark the
+/// functions to start a collapsable UI section and `nk_tree_xxx_pop` to mark the
 /// end.
-/// Each starting 函数 will either return `false(0)` if the tree is collapsed
+/// Each starting function will either return `false(0)` if the tree is collapsed
 /// or hidden and therefore does not need to be filled with content or `true(1)`
 /// if visible and required to be filled.
 ///
 /// !!! Note
-///     The tree header does not require and layouting 函数 and instead
+///     The tree header does not require and layouting function and instead
 ///     calculates a auto height based on the currently used font size
 ///
-/// The tree ending 函数s only need to be called if the tree content is
-/// actually visible. So make sure the tree push 函数 is guarded by `if`
+/// The tree ending functions only need to be called if the tree content is
+/// actually visible. So make sure the tree push function is guarded by `if`
 /// and the pop call is only taken if the tree is visible.
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
@@ -2749,9 +2749,9 @@ NK_API void nk_group_scrolled_end(struct nk_context*);
 /*/// #### nk_tree_push
 /// Starts a collapsable UI section with internal state management
 /// !!! WARNING
-///     To keep track of the runtime tree collapsable state this 函数 uses
+///     To keep track of the runtime tree collapsable state this function uses
 ///     defines `__FILE__` and `__LINE__` to generate a unique ID. If you want
-///     to call this 函数 in a loop please use `nk_tree_push_id` or
+///     to call this function in a loop please use `nk_tree_push_id` or
 ///     `nk_tree_push_hashed` instead.
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
@@ -2780,7 +2780,7 @@ NK_API void nk_group_scrolled_end(struct nk_context*);
 /// __type__    | Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
 /// __title__   | Label printed in the tree header
 /// __state__   | Initial tree state value out of nk_collapse_states
-/// __id__      | Loop counter index if this 函数 is called in a loop
+/// __id__      | Loop counter index if this function is called in a loop
 ///
 /// Returns `true(1)` if visible and fillable with widgets or `false(0)` otherwise
 */
@@ -2800,7 +2800,7 @@ NK_API void nk_group_scrolled_end(struct nk_context*);
 /// __state__   | Initial tree state value out of nk_collapse_states
 /// __hash__    | Memory block or string to generate the ID from
 /// __len__     | Size of passed memory block or string in __hash__
-/// __seed__    | Seeding value if this 函数 is called in a loop or default to `0`
+/// __seed__    | Seeding value if this function is called in a loop or default to `0`
 ///
 /// Returns `true(1)` if visible and fillable with widgets or `false(0)` otherwise
 */
@@ -2808,9 +2808,9 @@ NK_API int nk_tree_push_hashed(struct nk_context*, enum nk_tree_type, const char
 /*/// #### nk_tree_image_push
 /// Start a collapsable UI section with image and label header
 /// !!! WARNING
-///     To keep track of the runtime tree collapsable state this 函数 uses
+///     To keep track of the runtime tree collapsable state this function uses
 ///     defines `__FILE__` and `__LINE__` to generate a unique ID. If you want
-///     to call this 函数 in a loop please use `nk_tree_image_push_id` or
+///     to call this function in a loop please use `nk_tree_image_push_id` or
 ///     `nk_tree_image_push_hashed` instead.
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
@@ -2843,7 +2843,7 @@ NK_API int nk_tree_push_hashed(struct nk_context*, enum nk_tree_type, const char
 /// __img__     | Image to display inside the header on the left of the label
 /// __title__   | Label printed in the tree header
 /// __state__   | Initial tree state value out of nk_collapse_states
-/// __id__      | Loop counter index if this 函数 is called in a loop
+/// __id__      | Loop counter index if this function is called in a loop
 ///
 /// Returns `true(1)` if visible and fillable with widgets or `false(0)` otherwise
 */
@@ -2864,7 +2864,7 @@ NK_API int nk_tree_push_hashed(struct nk_context*, enum nk_tree_type, const char
 /// __state__   | Initial tree state value out of nk_collapse_states
 /// __hash__    | Memory block or string to generate the ID from
 /// __len__     | Size of passed memory block or string in __hash__
-/// __seed__    | Seeding value if this 函数 is called in a loop or default to `0`
+/// __seed__    | Seeding value if this function is called in a loop or default to `0`
 ///
 /// Returns `true(1)` if visible and fillable with widgets or `false(0)` otherwise
 */
@@ -3165,10 +3165,10 @@ NK_API int nk_color_pick(struct nk_context*, struct nk_colorf*, enum nk_color_fo
 ///     nk_foreach(cmd, &ctx) {
 ///     switch (cmd->type) {
 ///     case NK_COMMAND_LINE:
-///         your_draw_line_函数(...)
+///         your_draw_line_function(...)
 ///         break;
 ///     case NK_COMMAND_RECT
-///         your_draw_rect_函数(...)
+///         your_draw_rect_function(...)
 ///         break;
 ///     case ...:
 ///         // [...]
@@ -3201,7 +3201,7 @@ NK_API int nk_color_pick(struct nk_context*, struct nk_colorf*, enum nk_color_fo
 ///
 /// 参数           | 描述
 /// --------------------|-----------------------------------------------------------
-/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting 函数
+/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting function
 /// __name__            | String used both as a label as well as a unique identifier
 /// __min__             | Minimum value not allowed to be underflown
 /// __val__             | Integer pointer to be modified
@@ -3222,7 +3222,7 @@ NK_API void nk_property_int(struct nk_context*, const char *name, int min, int *
 ///
 /// 参数           | 描述
 /// --------------------|-----------------------------------------------------------
-/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting 函数
+/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting function
 /// __name__            | String used both as a label as well as a unique identifier
 /// __min__             | Minimum value not allowed to be underflown
 /// __val__             | Float pointer to be modified
@@ -3243,7 +3243,7 @@ NK_API void nk_property_float(struct nk_context*, const char *name, float min, f
 ///
 /// 参数           | 描述
 /// --------------------|-----------------------------------------------------------
-/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting 函数
+/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting function
 /// __name__            | String used both as a label as well as a unique identifier
 /// __min__             | Minimum value not allowed to be underflown
 /// __val__             | Double pointer to be modified
@@ -3264,7 +3264,7 @@ NK_API void nk_property_double(struct nk_context*, const char *name, double min,
 ///
 /// 参数           | 描述
 /// --------------------|-----------------------------------------------------------
-/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting 函数
+/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting function
 /// __name__            | String used both as a label as well as a unique identifier
 /// __min__             | Minimum value not allowed to be underflown
 /// __val__             | Current integer value to be modified and returned
@@ -3287,7 +3287,7 @@ NK_API int nk_propertyi(struct nk_context*, const char *name, int min, int val, 
 ///
 /// 参数           | 描述
 /// --------------------|-----------------------------------------------------------
-/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting 函数
+/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting function
 /// __name__            | String used both as a label as well as a unique identifier
 /// __min__             | Minimum value not allowed to be underflown
 /// __val__             | Current float value to be modified and returned
@@ -3310,7 +3310,7 @@ NK_API float nk_propertyf(struct nk_context*, const char *name, float min, float
 ///
 /// 参数           | 描述
 /// --------------------|-----------------------------------------------------------
-/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting 函数
+/// __ctx__             | Must point to an previously initialized `nk_context` struct after calling a layouting function
 /// __name__            | String used both as a label as well as a unique identifier
 /// __min__             | Minimum value not allowed to be underflown
 /// __val__             | Current double value to be modified and returned
@@ -3736,7 +3736,7 @@ NK_API const char* nk_utf_at(const char *buffer, int length, int index, nk_rune 
 
     3.) Nuklear font baker
     ------------------------------------
-    The final approach if you do not have a font handling 函数ality or don't
+    The final approach if you do not have a font handling functionality or don't
     want to use it in this library is by using the optional font baker.
     The font baker APIs can be used to create a font plus font atlas texture
     and can be used with or without the vertex buffer output.
@@ -3747,7 +3747,7 @@ NK_API const char* nk_utf_at(const char *buffer, int length, int index, nk_rune 
     an extension to nuklear and does not really depend on any `nk_context` state.
 
     Font baker need to be initialized first by one of the nk_font_atlas_init_xxx
-    函数s. If you don't care about memory just call the default version
+    functions. If you don't care about memory just call the default version
     `nk_font_atlas_init_default` which will allocate all memory from the standard library.
     If you want to control memory allocation but you don't care if the allocated
     memory is temporary and therefore can be freed directly after the baking process
@@ -3755,7 +3755,7 @@ NK_API const char* nk_utf_at(const char *buffer, int length, int index, nk_rune 
 
     After successfully initializing the font baker you can add Truetype(.ttf) fonts from
     different sources like memory or from file by calling one of the `nk_font_atlas_add_xxx`.
-    函数s. Adding font will permanently store each font, font config and ttf memory block(!)
+    functions. Adding font will permanently store each font, font config and ttf memory block(!)
     inside the font atlas and allows to reuse the font atlas. If you don't want to reuse
     the font baker by for example adding additional fonts you can call
     `nk_font_atlas_cleanup` after the baking process is over (after calling nk_font_atlas_end).
@@ -3998,7 +3998,7 @@ NK_API void nk_font_atlas_clear(struct nk_font_atlas*);
 
     The final and easiest way can be used by defining
     NK_INCLUDE_DEFAULT_ALLOCATOR which uses the standard library memory
-    allocation 函数s malloc and free and takes over complete control over
+    allocation functions malloc and free and takes over complete control over
     memory in this library.
 */
 struct nk_memory_status {
@@ -4072,7 +4072,7 @@ NK_API nk_size nk_buffer_total(struct nk_buffer*);
  *  to manage and manipulate dynamic or fixed size string content. This is _NOT_
  *  the default string handling method. The only instance you should have any contact
  *  with this API is if you interact with an `nk_text_edit` object inside one of the
- *  copy and paste 函数s and even there only for more advanced cases. */
+ *  copy and paste functions and even there only for more advanced cases. */
 struct nk_str {
     struct nk_buffer buffer;
     int len; /* in codepoints/runes/glyphs */
@@ -4127,7 +4127,7 @@ NK_API int nk_str_len_char(struct nk_str*);
 /* Editing text in this library is handled by either `nk_edit_string` or
  * `nk_edit_buffer`. But like almost everything in this library there are multiple
  * ways of doing it and a balance between control and ease of use with memory
- * as well as 函数ality controlled by flags.
+ * as well as functionality controlled by flags.
  *
  * This library generally allows three different levels of memory control:
  * First of is the most basic way of just providing a simple char array with
@@ -4209,7 +4209,7 @@ struct nk_text_edit {
     struct nk_text_undo_state undo;
 };
 
-/* filter 函数 */
+/* filter function */
 NK_API int nk_filter_default(const struct nk_text_edit*, nk_rune unicode);
 NK_API int nk_filter_ascii(const struct nk_text_edit*, nk_rune unicode);
 NK_API int nk_filter_float(const struct nk_text_edit*, nk_rune unicode);
@@ -4562,7 +4562,7 @@ NK_API int nk_input_is_key_down(const struct nk_input*, enum nk_keys);
  * ===============================================================*/
 #ifdef NK_INCLUDE_VERTEX_BUFFER_OUTPUT
 /*  The optional vertex buffer draw list provides a 2D drawing context
-    with antialiasing 函数ality which takes basic filled or outlined shapes
+    with antialiasing functionality which takes basic filled or outlined shapes
     or a path and outputs vertexes, elements and draw commands.
     The actual draw list API is not required to be used directly while using this
     library since converting the default library draw command output is done by
@@ -5937,9 +5937,9 @@ NK_LIB void nk_property(struct nk_context *ctx, const char *name, struct nk_prop
  *
  * ===============================================================*/
 /*  Since nuklear is supposed to work on all systems providing floating point
-    math without any dependencies I also had to implement my own math 函数s
+    math without any dependencies I also had to implement my own math functions
     for sqrt, sin and cos. Since the actual highly accurate implementations for
-    the standard library 函数s are quite complex and I do not need high
+    the standard library functions are quite complex and I do not need high
     precision for my use cases I use approximations.
 
     Sqrt
@@ -5952,15 +5952,15 @@ NK_LIB void nk_property(struct nk_context *ctx, const char *name, struct nk_prop
 
     Sine/Cosine
     -----------
-    All constants inside both 函数 are generated Remez's minimax
+    All constants inside both function are generated Remez's minimax
     approximations for value range 0...2*PI. The reason why I decided to
     approximate exactly that range is that nuklear only needs sine and
     cosine to generate circles which only requires that exact range.
     In addition I used Remez instead of Taylor for additional precision:
-    www.lolengine.net/blog/2011/12/21/better-函数-approximations.
+    www.lolengine.net/blog/2011/12/21/better-function-approximations.
 
     The tool I used to generate constants for both sine and cosine
-    (it can actually approximate a lot more 函数s) can be
+    (it can actually approximate a lot more functions) can be
     found here: www.lolengine.net/wiki/oss/lolremez
 */
 NK_LIB float
@@ -10511,7 +10511,7 @@ nk_rp_setup_allow_out_of_mem(struct nk_rp_context *context, int allow_out_of_mem
         /* if it's ok to run out of memory, then don't bother aligning them; */
         /* this gives better packing, but may fail due to OOM (even though */
         /* the rectangles easily fit). @TODO a smarter approach would be to only */
-        /* quantize once we've hit OOM, then we could get rid of this 参数. */
+        /* quantize once we've hit OOM, then we could get rid of this parameter. */
         context->align = 1;
     else {
         /* if it's not ok to run out of memory, then quantize the widths */
@@ -17132,7 +17132,7 @@ nk_menubar_begin(struct nk_context *ctx)
     layout = ctx->current->layout;
     NK_ASSERT(layout->at_y == layout->bounds.y);
     /* if this assert triggers you allocated space between nk_begin and nk_menubar_begin.
-    If you want a menubar the first nuklear 函数 after `nk_begin` has to be a
+    If you want a menubar the first nuklear function after `nk_begin` has to be a
     `nk_menubar_begin` call. Inside the menubar you then have to allocate space for
     widgets (also supports multiple rows).
     Example:
@@ -25224,7 +25224,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 
 /// ## 更新日志
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~none
-/// [date][x.yy.zz]-[描述]
+/// [date][x.yy.zz]-[description]
 /// -[date]: date on which the change has been pushed
 /// -[x.yy.zz]: Numerical version string representation. Each version number on the right
 ///             resets back to zero if version on the left is incremented.
@@ -25246,7 +25246,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 ///                        because of conversions between float and byte color representation.
 ///                        Color pickers now use floating point values to represent
 ///                        HSV values. To get back the old behavior I added some additional
-///                        color conversion 函数s to cast between nk_color and
+///                        color conversion functions to cast between nk_color and
 ///                        nk_colorf.
 /// - 2017/12/23 (2.00.7) - Fixed small warning
 /// - 2017/12/23 (2.00.7) - Fixed nk_edit_buffer behavior if activated to allow input
@@ -25254,12 +25254,12 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 /// - 2017/12/04 (2.00.6) - Added formated string tooltip widget
 /// - 2017/11/18 (2.00.5) - Fixed window becoming hidden with flag NK_WINDOW_NO_INPUT
 /// - 2017/11/15 (2.00.4) - Fixed font merging
-/// - 2017/11/07 (2.00.3) - Fixed window size and position modifier 函数s
+/// - 2017/11/07 (2.00.3) - Fixed window size and position modifier functions
 /// - 2017/09/14 (2.00.2) - Fixed nk_edit_buffer and nk_edit_focus behavior
 /// - 2017/09/14 (2.00.1) - Fixed window closing behavior
 /// - 2017/09/14 (2.00.0) - BREAKING CHANGE: Modifing window position and size funtions now
 ///                        require the name of the window and must happen outside the window
-///                        building process (between 函数 call nk_begin and nk_end).
+///                        building process (between function call nk_begin and nk_end).
 /// - 2017/09/11 (1.40.9) - Fixed window background flag if background window is declared last
 /// - 2017/08/27 (1.40.8) - Fixed `nk_item_is_any_active` for hidden windows
 /// - 2017/08/27 (1.40.7) - Fixed window background flag
@@ -25281,7 +25281,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 ///                        that you can directly set it by `nk_layout_set_min_row_height` and
 ///                        reset the value back by calling `nk_layout_reset_min_row_height.
 /// - 2017/06/08 (1.39.1) - Fixed property text edit handling bug caused by past `nk_widget` fix
-/// - 2017/06/08 (1.39.0) - Added 函数 to retrieve window space without calling a nk_layout_xxx 函数
+/// - 2017/06/08 (1.39.0) - Added function to retrieve window space without calling a nk_layout_xxx function
 /// - 2017/06/06 (1.38.5) - Fixed `nk_convert` return flag for command buffer
 /// - 2017/05/23 (1.38.4) - Fixed activation behavior for widgets partially clipped
 /// - 2017/05/10 (1.38.3) - Fixed wrong min window size mouse scaling over boundries
@@ -25356,13 +25356,13 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 ///                        is not enough. That behavior is now fixed. By default if
 ///                        both varargs as well as stdio is selected I try to use
 ///                        vsnprintf if not possible I will revert to vsprintf. If
-///                        varargs but not stdio was defined I will use my own 函数.
+///                        varargs but not stdio was defined I will use my own function.
 /// - 2016/09/15 (1.21.2)- Fixed panel `close` behavior for deeper panel levels
 /// - 2016/09/15 (1.21.1)- Fixed C++ errors and wrong argument to `nk_panel_get_xxxx`
 /// - 2016/09/13 (1.21.0) - !BREAKING! Fixed nonblocking popup behavior in menu, combo,
 ///                        and contextual which prevented closing in y-direction if
 ///                        popup did not reach max height.
-///                        In addition the height 参数 was changed into vec2
+///                        In addition the height parameter was changed into vec2
 ///                        for width and height to have more control over the popup size.
 /// - 2016/09/13 (1.20.3) - Cleaned up and extended type selection
 /// - 2016/09/13 (1.20.2)- Fixed slider behavior hopefully for the last time. This time
@@ -25370,7 +25370,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 /// - 2016/09/13 (1.20.1)- Internal change to divide window/panel flags into panel flags and types.
 ///                        Suprisinly spend years in C and still happened to confuse types
 ///                        with flags. Probably something to take note.
-/// - 2016/09/08 (1.20.0)- Added additional helper 函数 to make it easier to just
+/// - 2016/09/08 (1.20.0)- Added additional helper function to make it easier to just
 ///                        take the produced buffers from `nk_convert` and unplug the
 ///                        iteration process from `nk_context`. So now you can
 ///                        just use the vertex,element and command buffer + two pointer
@@ -25412,7 +25412,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 /// - 2016/08/30 (1.11.1) - Fixed overlapping minimized window selection
 /// - 2016/08/30 (1.11.0) - Removed some internal complexity and overly complex code
 ///                        handling panel padding and panel border.
-/// - 2016/08/29 (1.10.0) - Added additional height 参数 to `nk_combobox_xxx`
+/// - 2016/08/29 (1.10.0) - Added additional height parameter to `nk_combobox_xxx`
 /// - 2016/08/29 (1.10.0) - Fixed drawing bug in dynamic popups
 /// - 2016/08/29 (1.10.0) - Added experimental mouse scrolling to popups, menus and comboboxes
 /// - 2016/08/26 (1.10.0) - Added window name string prepresentation to account for
@@ -25433,7 +25433,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 ///                        window only as selected by hovering and not by clicking.
 /// - 2016/08/14 (1.09.2)- Fixed a bug in font atlas which caused wrong loading
 ///                        of glyphes for font with multiple ranges.
-/// - 2016/08/12 (1.09.1)- Added additional 函数 to check if window is currently
+/// - 2016/08/12 (1.09.1)- Added additional function to check if window is currently
 ///                        hidden and therefore not visible.
 /// - 2016/08/12 (1.09.1)- nk_window_is_closed now queries the correct flag `NK_WINDOW_CLOSED`
 ///                        instead of the old flag `NK_WINDOW_HIDDEN`
@@ -25475,10 +25475,10 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 ///                        by hovering only if mouse is not pressed.
 /// - 2016/08/04 (1.04.2)- Fixed changing fonts
 /// - 2016/08/03 (1.04.1)- Fixed `NK_WINDOW_BACKGROUND` behavior
-/// - 2016/08/03 (1.04.0) - Added color 参数 to `nk_draw_image`
+/// - 2016/08/03 (1.04.0) - Added color parameter to `nk_draw_image`
 /// - 2016/08/03 (1.04.0) - Added additional window padding style attributes for
 ///                        sub windows (combo, menu, ...)
-/// - 2016/08/03 (1.04.0) - Added 函数s to show/hide software cursor
+/// - 2016/08/03 (1.04.0) - Added functions to show/hide software cursor
 /// - 2016/08/03 (1.04.0) - Added `NK_WINDOW_BACKGROUND` flag to force a window
 ///                        to be always in the background of the screen
 /// - 2016/08/03 (1.03.2)- Removed invalid assert macro for NK_RGB color picker
@@ -25497,7 +25497,7 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 ///                        font atlas memory management by converting pointer
 ///                        arrays for fonts and font configurations to lists.
 /// - 2016/07/15 (1.00.0) - Changed button API to use context dependend button
-///                        behavior instead of passing it for every 函数 call.
+///                        behavior instead of passing it for every function call.
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /// ## 画廊
@@ -25512,11 +25512,11 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 /// ![Figure [bf]: Heavy modified version](https://cloud.githubusercontent.com/assets/8057201/14902576/339926a8-0d9c-11e6-9fee-a8b73af04473.png)
 ///
 /// ## 荣誉名单
-/// Developed by Micha Mettke and every direct or indirect github contributor. 
+/// Developed by Micha Mettke and every direct or indirect github contributor. <br /><br />
 ///
-/// Embeds [stb_texedit](https://github.com/nothings/stb/blob/master/stb_textedit.h), [stb_truetype](https://github.com/nothings/stb/blob/master/stb_truetype.h) and [stb_rectpack](https://github.com/nothings/stb/blob/master/stb_rect_pack.h) by Sean Barret (public domain) 
-/// Uses [stddoc.c](https://github.com/r-lyeh/stddoc.c) from r-lyeh@github.com for documentation generation 
-/// Embeds ProggyClean.ttf font by Tristan Grimmer (MIT license). 
+/// Embeds [stb_texedit](https://github.com/nothings/stb/blob/master/stb_textedit.h), [stb_truetype](https://github.com/nothings/stb/blob/master/stb_truetype.h) and [stb_rectpack](https://github.com/nothings/stb/blob/master/stb_rect_pack.h) by Sean Barret (public domain) <br />
+/// Uses [stddoc.c](https://github.com/r-lyeh/stddoc.c) from r-lyeh@github.com for documentation generation <br /><br />
+/// Embeds ProggyClean.ttf font by Tristan Grimmer (MIT license). <br />
 ///
 /// Big thank you to Omar Cornut (ocornut@github) for his [imgui library](https://github.com/ocornut/imgui) and
 /// giving me the inspiration for this library, Casey Muratori for handmade hero
@@ -25525,3 +25525,4 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 /// in libraries and brought me to create some of my own. Finally Apoorva Joshi
 /// for his single header file packer.
 */
+

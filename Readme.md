@@ -7,22 +7,21 @@
 * [ ] 中文文档（未完成）
 * [ ] 源代码注释翻译（未完成）
 * [ ] 中文示例（未完成）
-
 ## 特色
 
 - Immediate mode graphical user interface toolkit
-- Single header library
-- Written in C89 (ANSI C)
-- Small codebase (~18kLOC)
+- 单一头文件
+- 使用 C89 (ANSI C) 编写
+- 小文件 (~18kLOC)
 - Focus on portability, efficiency and simplicity
-- No dependencies (not even the standard library if not wanted)
+- 无依赖 (通过设置甚至可以不依赖标准库)
 - Fully skinnable and customizable
 - Low memory footprint with total memory control if needed or wanted
-- UTF-8 support
+- 支持 UTF-8
 - No global or hidden state
 - Customizable library modules (you can compile and use only what you need)
 - Optional font baker and vertex buffer output
-- [Documentation](https://rawgit.com/vurtun/nuklear/master/doc/nuklear.html)
+- [中文文档](https://github/zoollcar/nuklear/doc/nuklear.html)
 
 ## Building
 
