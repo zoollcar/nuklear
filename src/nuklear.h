@@ -5034,7 +5034,7 @@ struct nk_panel {
 };
 
 /*==============================================================
- *                          WINDOW
+ *                          WINDOW 窗口
  * =============================================================*/
 #ifndef NK_WINDOW_MAX_NAME
 #define NK_WINDOW_MAX_NAME 64
@@ -5044,9 +5044,9 @@ struct nk_table;
 enum nk_window_flags {
     NK_WINDOW_PRIVATE       = NK_FLAG(11),
     NK_WINDOW_DYNAMIC       = NK_WINDOW_PRIVATE,
-    /* special window type growing up in height while being filled to a certain maximum height */
+    /* 特殊窗口类型，永远在最顶？？ special window type growing up in height while being filled to a certain maximum height */
     NK_WINDOW_ROM           = NK_FLAG(12),
-    /* sets window widgets into a read only mode and does not allow input changes */
+    /* 将窗口小部件设定为只读模式，不允许输入更改 sets window widgets into a read only mode and does not allow input changes */
     NK_WINDOW_NOT_INTERACTIVE = NK_WINDOW_ROM|NK_WINDOW_NO_INPUT,
     /* prevents all interaction caused by input to either window or widgets inside */
     NK_WINDOW_HIDDEN        = NK_FLAG(13),
@@ -5109,7 +5109,7 @@ struct nk_window {
     struct nk_panel *layout;
     float scrollbar_hiding_timer;
 
-    /* persistent widget state */
+    /* persistent widget state 持久的小部件状态 */
     struct nk_property_state property;
     struct nk_popup_state popup;
     struct nk_edit_state edit;
@@ -5228,13 +5228,13 @@ struct nk_table {
     nk_uint values[NK_VALUE_PAGE_CAPACITY];
     struct nk_table *next, *prev;
 };
-
+/* 页面元素数据 */
 union nk_page_data {
     struct nk_table tbl;
     struct nk_panel pan;
     struct nk_window win;
 };
-
+/* 页面元素 */
 struct nk_page_element {
     union nk_page_data data;
     struct nk_page_element *next;
@@ -5259,7 +5259,7 @@ struct nk_pool {
 };
 
 struct nk_context {
-/* public: can be accessed freely */
+/* public: 下面的可以被安全的访问 can be accessed freely */
     struct nk_input input;
     struct nk_style style;
     struct nk_buffer memory;
@@ -5269,7 +5269,7 @@ struct nk_context {
     struct nk_configuration_stacks stacks;
     float delta_time_seconds;
 
-/* private:
+/* private: 下面的只有在了解后才能访问
     should only be accessed if you
     know what you are doing */
 #ifdef NK_INCLUDE_VERTEX_BUFFER_OUTPUT
@@ -5286,7 +5286,7 @@ struct nk_context {
     /* draw buffer used for overlay drawing operation like cursor */
     struct nk_command_buffer overlay;
 
-    /* windows */
+    /* windows 窗口们 */
     int build;
     int use_pool;
     struct nk_pool pool;

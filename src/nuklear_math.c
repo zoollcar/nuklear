@@ -148,6 +148,7 @@ nk_get_null_rect(void)
 {
     return nk_null_rect;
 }
+/* nk 区域结构体 */
 NK_API struct nk_rect
 nk_rect(float x, float y, float w, float h)
 {

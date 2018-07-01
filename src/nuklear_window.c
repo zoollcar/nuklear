@@ -3,9 +3,10 @@
 
 /* ===============================================================
  *
- *                              WINDOW
+ *                              WINDOW 窗口
  *
  * ===============================================================*/
+/* 创建窗口 */
 NK_LIB void*
 nk_create_window(struct nk_context *ctx)
 {
@@ -47,16 +48,20 @@ nk_find_window(struct nk_context *ctx, nk_hash hash, const char *name)
 {
     struct nk_window *iter;
     iter = ctx->begin;
+    /* 一个一个的寻找 */
     while (iter) {
         NK_ASSERT(iter != iter->next);
+        /* window结构体中的name存储的是哈希值 */
         if (iter->name == hash) {
+            /* window中的 name_string 是 name 字符串 */
             int max_len = nk_strlen(iter->name_string);
+            /* 去除hash相同而名字不同的情况 */
             if (!nk_stricmpn(iter->name_string, name, max_len))
-                return iter;
+                return iter;/* 找到了 */
         }
         iter = iter->next;
     }
-    return 0;
+    return 0;/* 没找到 */
 }
 NK_LIB void
 nk_insert_window(struct nk_context *ctx, struct nk_window *win,
@@ -67,6 +72,7 @@ nk_insert_window(struct nk_context *ctx, struct nk_window *win,
     NK_ASSERT(win);
     if (!win || !ctx) return;
 
+    /* 从ctx.begin 开头的 链表中找到 win */
     iter = ctx->begin;
     while (iter) {
         NK_ASSERT(iter != iter->next);
@@ -74,16 +80,17 @@ nk_insert_window(struct nk_context *ctx, struct nk_window *win,
         if (iter == win) return;
         iter = iter->next;
     }
-
+    /* 如果ctx.begin 是空的 */
     if (!ctx->begin) {
         win->next = 0;
         win->prev = 0;
         ctx->begin = win;
         ctx->end = win;
-        ctx->count = 1;
+        ctx->count = 1;/* 计数器 */
         return;
     }
     if (loc == NK_INSERT_BACK) {
+        /* 如果是插入到最后 */
         struct nk_window *end;
         end = ctx->end;
         end->flags |= NK_WINDOW_ROM;
@@ -94,6 +101,7 @@ nk_insert_window(struct nk_context *ctx, struct nk_window *win,
         ctx->active = ctx->end;
         ctx->end->flags &= ~(nk_flags)NK_WINDOW_ROM;
     } else {
+        /* 插入到开头 */
         /*ctx->end->flags |= NK_WINDOW_ROM;*/
         ctx->begin->prev = win;
         win->next = ctx->begin;
@@ -101,7 +109,7 @@ nk_insert_window(struct nk_context *ctx, struct nk_window *win,
         ctx->begin = win;
         ctx->begin->flags &= ~(nk_flags)NK_WINDOW_ROM;
     }
-    ctx->count++;
+    ctx->count++;/* 计数器加一 */
 }
 NK_LIB void
 nk_remove_window(struct nk_context *ctx, struct nk_window *win)
@@ -132,85 +140,102 @@ nk_remove_window(struct nk_context *ctx, struct nk_window *win)
     win->prev = 0;
     ctx->count--;
 }
+/* nk_begin 建立一个新窗口，除非想隐藏它，否则在调用每一帧都要调用   */
+/* 其实就是 name 和 title 一样的 nk_begin_titled */
 NK_API int
 nk_begin(struct nk_context *ctx, const char *title,
     struct nk_rect bounds, nk_flags flags)
 {
     return nk_begin_titled(ctx, title, title, bounds, flags);
 }
+/* 建立一个新窗口，分离的标题和标识符的窗口，允许出现具有相同名称但不同标题的多个窗口  */
+/* nk_flags 是标志 追根究底 是一个无符号32位整数 */
 NK_API int
 nk_begin_titled(struct nk_context *ctx, const char *name, const char *title,
     struct nk_rect bounds, nk_flags flags)
 {
     struct nk_window *win;
     struct nk_style *style;
+    /* nk_hash 是一个无符号整数 */
     nk_hash title_hash;
     int title_len;
     int ret = 0;
-
+    /* NK_ASSERT 是 NK_ASSERT宏 如果用户没定义 用的是 assert.h 中的定义*/
+    /* 作用是 当参数为空时报错，给出错误提示 */
     NK_ASSERT(ctx);
     NK_ASSERT(name);
     NK_ASSERT(title);
+    /* 字体检查 */
     NK_ASSERT(ctx->style.font && ctx->style.font->width && "if this triggers you forgot to add a font");
+    /* ctx->current 一定要是空的 否则说明上次没调用 nk_end */
     NK_ASSERT(!ctx->current && "if this triggers you missed a `nk_end` call");
     if (!ctx || ctx->current || !title || !name)
         return 0;
 
-    /* find or create window */
+    /* 寻找或是创建一个窗口 find or create window */
     style = &ctx->style;
     title_len = (int)nk_strlen(name);
+    /* 将窗口名字计算为一个哈希值 */
     title_hash = nk_murmur_hash(name, (int)title_len, NK_WINDOW_TITLE);
+    /* 寻找窗口，返回值为0表示没找到，返回值为一个nk_window指针说明找到了 */
     win = nk_find_window(ctx, title_hash, name);
+    /* 创建或更新窗口 */
     if (!win) {
-        /* create new window */
+        /* 创建一个新窗口 create new window */
         nk_size name_length = (nk_size)nk_strlen(name);
         win = (struct nk_window*)nk_create_window(ctx);
         NK_ASSERT(win);
         if (!win) return 0;
-
+        /* 将窗口添加到 ctx */
         if (flags & NK_WINDOW_BACKGROUND)
-            nk_insert_window(ctx, win, NK_INSERT_FRONT);
-        else nk_insert_window(ctx, win, NK_INSERT_BACK);
+            nk_insert_window(ctx, win, NK_INSERT_FRONT);/* 顶部添加 */
+        else nk_insert_window(ctx, win, NK_INSERT_BACK);/* 尾部添加 */
+        /* 初始化命令缓冲区 */
         nk_command_buffer_init(&win->buffer, &ctx->memory, NK_CLIPPING_ON);
-
         win->flags = flags;
         win->bounds = bounds;
         win->name = title_hash;
+        /* 如果窗口名字比最大长度长，会被截断 */
         name_length = NK_MIN(name_length, NK_WINDOW_MAX_NAME-1);
         NK_MEMCPY(win->name_string, name, name_length);
         win->name_string[name_length] = 0;
+        /* 不是弹出式窗口 */
         win->popup.win = 0;
         if (!ctx->active)
             ctx->active = win;
     } else {
-        /* update window */
+        /* 更新窗口 update window */
         win->flags &= ~(nk_flags)(NK_WINDOW_PRIVATE-1);
         win->flags |= flags;
+        /* 如果窗口可移动 就移动 */
         if (!(win->flags & (NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE)))
             win->bounds = bounds;
-        /* If this assert triggers you either:
+        /* 如果这个断言被触发了，您可能：
          *
-         * I.) Have more than one window with the same name or
-         * II.) You forgot to actually draw the window.
-         *      More specific you did not call `nk_clear` (nk_clear will be
-         *      automatically called for you if you are using one of the
-         *      provided demo backends). */
+         * I.) 有一个以上的具有相同 name 的窗口
+         * II.) 忘了绘制窗口
+         *      具体来说 您没有调用 `nk_clear` 
+         *      (如果您使用的是 demo 后端，nk_clear 会自动被调用). 
+         * */
         NK_ASSERT(win->seq != ctx->seq);
         win->seq = ctx->seq;
+        /* 调整活动的窗口 */
         if (!ctx->active && !(win->flags & NK_WINDOW_HIDDEN)) {
             ctx->active = win;
             ctx->end = win;
         }
     }
     if (win->flags & NK_WINDOW_HIDDEN) {
+        /* 如果窗口不显示 */
         ctx->current = win;
         win->layout = 0;
         return 0;
-    } else nk_start(ctx, win);
+    } else nk_start(ctx, win);/* 显示窗口， todo:将绘制命令缓冲区加入？？ */
 
-    /* window overlapping */
+    /* 窗口重叠 window overlapping */
     if (!(win->flags & NK_WINDOW_HIDDEN) && !(win->flags & NK_WINDOW_NO_INPUT))
     {
+        /* TODO: 翻译进度 */
         int inpanel, ishovered;
         struct nk_window *iter = win;
         float h = ctx->style.font->height + 2.0f * style->window.header.padding.y +
@@ -218,7 +243,7 @@ nk_begin_titled(struct nk_context *ctx, const char *name, const char *title,
         struct nk_rect win_bounds = (!(win->flags & NK_WINDOW_MINIMIZED))?
             win->bounds: nk_rect(win->bounds.x, win->bounds.y, win->bounds.w, h);
 
-        /* activate window if hovered and no other window is overlapping this window */
+        /* 如果窗口 hovered 并且没有其他窗口和它重叠则 激活窗口 activate window if hovered and no other window is overlapping this window */
         inpanel = nk_input_has_mouse_click_down_in_rect(&ctx->input, NK_BUTTON_LEFT, win_bounds, nk_true);
         inpanel = inpanel && ctx->input.mouse.buttons[NK_BUTTON_LEFT].clicked;
         ishovered = nk_input_is_mouse_hovering_rect(&ctx->input, win_bounds);

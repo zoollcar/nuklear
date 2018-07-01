@@ -3,7 +3,7 @@
 
 /* ===============================================================
  *
- *                              UTIL
+ *                              UTIL 实用工具
  *
  * ===============================================================*/
 NK_INTERN int nk_str_match_here(const char *regexp, const char *text);
@@ -126,6 +126,7 @@ nk_zero(void *ptr, nk_size size)
     NK_ASSERT(ptr);
     NK_MEMSET(ptr, 0, size);
 }
+/* 计算字符串长度 */
 NK_API int
 nk_strlen(const char *str)
 {
@@ -909,6 +910,7 @@ nk_strfmt(char *buf, int buf_size, const char *fmt, va_list args)
     return result;
 }
 #endif
+/* 计算哈希值 */
 NK_API nk_hash
 nk_murmur_hash(const void * key, int len, nk_hash seed)
 {

@@ -118,8 +118,8 @@ int main(void)
 
     while (running)
     {
-        /* Input */
-        MSG msg;
+        /* Input 输入 */
+        MSG msg; /* windows消息结构体 */
         nk_input_begin(ctx);
         if (needs_refresh == 0) {
             if (GetMessageW(&msg, NULL, 0, 0) <= 0)
@@ -130,7 +130,7 @@ int main(void)
             }
             needs_refresh = 1;
         } else needs_refresh = 0;
-
+        /* 如果没有收到消息就不刷新，惰性刷新 */
         while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
             if (msg.message == WM_QUIT)
                 running = 0;
@@ -141,6 +141,7 @@ int main(void)
         nk_input_end(ctx);
 
         /* GUI */
+        /* nk__begin和nk_end之间建立程序界面 */
         if (nk_begin(ctx, "Demo", nk_rect(50, 50, 200, 200),
             NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
             NK_WINDOW_CLOSABLE|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
@@ -148,13 +149,18 @@ int main(void)
             enum {EASY, HARD};
             static int op = EASY;
             static int property = 20;
-
+            /* 固定小部件像素宽度（纵向布局） */
+            /* 创建小部件之前使用 nk_layout_xxx 来说明后面的小部件布局 */
             nk_layout_row_static(ctx, 30, 80, 1);
-            if (nk_button_label(ctx, "button"))
+            if (nk_button_label(ctx, "button")){
+                /* 点击事件 */
                 fprintf(stdout, "button pressed\n");
+            }
+            /* 小部件横向动态布局（默认是纵向） */
             nk_layout_row_dynamic(ctx, 30, 2);
             if (nk_option_label(ctx, "easy", op == EASY)) op = EASY;
             if (nk_option_label(ctx, "hard", op == HARD)) op = HARD;
+
             nk_layout_row_dynamic(ctx, 22, 1);
             nk_property_int(ctx, "Compression:", 0, &property, 100, 10, 1);
         }

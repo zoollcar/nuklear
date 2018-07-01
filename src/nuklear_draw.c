@@ -3,9 +3,11 @@
 
 /* ==============================================================
  *
- *                          DRAW
+ *                          DRAW 绘制
  *
  * ===============================================================*/
+/* 初始化命令缓冲区 */
+/* 看起来所有窗口的命令缓冲区都在主环境的缓冲区的不同地点 */
 NK_LIB void
 nk_command_buffer_init(struct nk_command_buffer *cb,
     struct nk_buffer *b, enum nk_command_clipping clip)
@@ -19,6 +21,7 @@ nk_command_buffer_init(struct nk_command_buffer *cb,
     cb->end = b->allocated;
     cb->last = b->allocated;
 }
+
 NK_LIB void
 nk_command_buffer_reset(struct nk_command_buffer *b)
 {

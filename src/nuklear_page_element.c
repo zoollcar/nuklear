@@ -3,9 +3,11 @@
 
 /* ===============================================================
  *
- *                          PAGE ELEMENT
+ *                          PAGE ELEMENT 页面元素
  *
  * ===============================================================*/
+/* 创建一个页面元素 */
+/* TODO: 如何创建一个页面元素的 */
 NK_LIB struct nk_page_element*
 nk_create_page_element(struct nk_context *ctx)
 {
