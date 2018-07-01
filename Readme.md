@@ -10,13 +10,13 @@
 
 ## 关于 Nuklear
 
-This is a minimal state immediate mode graphical user interface toolkit
-written in ANSI C and licensed under public domain. It was designed as a simple
-embeddable user interface for application and does not have any dependencies,
+这是一个小型的开箱即用的图形用户界面工具包
+使用 ANSI C 编写。
+这是一个小型的嵌入式用户界面，没用依赖
 a default renderbackend or OS window and input handling but instead provides a very modular
 library approach by using simple input state for input and draw
-commands describing primitive shapes as output. So instead of providing a
-layered library that tries to abstract over a number of platform and
+commands describing primitive shapes as output. So instead of providing 
+a layered library that tries to abstract over a number of platform and
 render backends it only focuses on the actual UI.
 
 ## 特色
@@ -33,7 +33,7 @@ render backends it only focuses on the actual UI.
 - No global or hidden state
 - 可定制的库模块（您可以只编译和使用您所需要的）
 - Optional font baker and vertex buffer output
-- [中文文档](https://github/zoollcar/nuklear/doc/nuklear.html)
+- [中文文档](https://github.com/zoollcar/nuklear/blob/master/doc/nuklear.html)
 
 ## 用法
 这个库自包含在一个单独的头文件中，
@@ -60,29 +60,28 @@ e.g.:
 ## 示例
 
 ```c
-/* init gui state */
-struct nk_context ctx;
-nk_init_fixed(&ctx, calloc(1, MAX_MEMORY), MAX_MEMORY, &font);
-
+// 初始化 gui 状态
 enum {EASY, HARD};
 static int op = EASY;
 static float value = 0.6f;
 static int i =  20;
+struct nk_context ctx;
 
+nk_init_fixed(&ctx, calloc(1, MAX_MEMORY), MAX_MEMORY, &font);
 if (nk_begin(&ctx, "Show", nk_rect(50, 50, 220, 220),
     NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE)) {
-    /* fixed widget pixel width */
+    // 固定小部件像素宽度
     nk_layout_row_static(&ctx, 30, 80, 1);
     if (nk_button_label(&ctx, "button")) {
-        /* event handling */
+        // event handling
     }
 
-    /* fixed widget window ratio width */
+    // 固定小部件宽高比
     nk_layout_row_dynamic(&ctx, 30, 2);
     if (nk_option_label(&ctx, "easy", op == EASY)) op = EASY;
     if (nk_option_label(&ctx, "hard", op == HARD)) op = HARD;
 
-    /* custom widget pixel width */
+    // 自定义小部件像素宽度
     nk_layout_row_begin(&ctx, NK_STATIC, 30, 2);
     {
         nk_layout_row_push(&ctx, 50);
