@@ -3,9 +3,10 @@
 
 /* ===============================================================
  *
- *                              PANEL
+ *                              PANEL 面板
  *
  * ===============================================================*/
+/* 创建面板 */
 NK_LIB void*
 nk_create_panel(struct nk_context *ctx)
 {
@@ -83,6 +84,7 @@ nk_panel_is_nonblock(enum nk_panel_type type)
 {
     return (type & NK_PANEL_SET_NONBLOCK)?1:0;
 }
+/* 开启面板 */
 NK_LIB int
 nk_panel_begin(struct nk_context *ctx, const char *title, enum nk_panel_type panel_type)
 {

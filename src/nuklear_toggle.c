@@ -267,9 +267,11 @@ NK_API int nk_checkbox_flags_label(struct nk_context *ctx, const char *label,
  *                          OPTION
  *
  * --------------------------------------------------------------*/
+/* 创建文字样式单选按钮 */
 NK_API int
 nk_option_text(struct nk_context *ctx, const char *text, int len, int is_active)
 {
+    /* TODO: 翻译进度4 单选按钮*/
     struct nk_window *win;
     struct nk_panel *layout;
     const struct nk_input *in;
@@ -307,6 +309,7 @@ nk_radio_text(struct nk_context *ctx, const char *text, int len, int *active)
     *active = nk_option_text(ctx, text, len, old_value);
     return old_value != *active;
 }
+/* 创建单选按钮 */
 NK_API int
 nk_option_label(struct nk_context *ctx, const char *label, int active)
 {

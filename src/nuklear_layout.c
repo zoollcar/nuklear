@@ -3,7 +3,7 @@
 
 /* ===============================================================
  *
- *                          LAYOUT
+ *                          LAYOUT 框架
  *
  * ===============================================================*/
 NK_API void
@@ -60,6 +60,8 @@ nk_layout_row_calculate_usable_space(const struct nk_style *style, enum nk_panel
     panel_space  = total_space - panel_padding - panel_spacing;
     return panel_space;
 }
+/* 设置面板布局 */
+/* 通过设置 win->layout 和 win->buffer 来控制后面的控件位置大小等信息 */
 NK_LIB void
 nk_panel_layout(const struct nk_context *ctx, struct nk_window *win,
     float height, int cols)
@@ -77,7 +79,7 @@ nk_panel_layout(const struct nk_context *ctx, struct nk_window *win,
     if (!ctx || !ctx->current || !ctx->current->layout)
         return;
 
-    /* prefetch some configuration data */
+    /* 先获得一些预设的配置数据 prefetch some configuration data */
     layout = win->layout;
     style = &ctx->style;
     out = &win->buffer;
@@ -93,7 +95,8 @@ nk_panel_layout(const struct nk_context *ctx, struct nk_window *win,
     NK_ASSERT(!(layout->flags & NK_WINDOW_HIDDEN));
     NK_ASSERT(!(layout->flags & NK_WINDOW_CLOSED));
 
-    /* update the current row and set the current row layout */
+    /* 更新当前行并设置当前行布局 update the current row and set the current row layout */
+    /* 通过前面获得的 layout 指针更改后面的小部件都会使用的 win->layout */
     layout->row.index = 0;
     layout->at_y += layout->row.height;
     layout->row.columns = cols;
@@ -103,7 +106,7 @@ nk_panel_layout(const struct nk_context *ctx, struct nk_window *win,
 
     layout->row.item_offset = 0;
     if (layout->flags & NK_WINDOW_DYNAMIC) {
-        /* draw background for dynamic panels */
+        /* 为动态区域设置背景 draw background for dynamic panels */
         struct nk_rect background;
         background.x = win->bounds.x;
         background.w = win->bounds.w;
@@ -112,23 +115,25 @@ nk_panel_layout(const struct nk_context *ctx, struct nk_window *win,
         nk_fill_rect(out, background, 0, color);
     }
 }
+/* 横向布局  */
 NK_LIB void
-nk_row_layout(struct nk_context *ctx, enum nk_layout_format fmt,
+nk_row_layout(struct nk_context *ctx, enum nk_layout_format fmt,/* fmt 布局类型 */
     float height, int cols, int width)
 {
-    /* update the current row and set the current row layout */
+    /* 更新当前行并设置当前行的布局 update the current row and set the current row layout */
     struct nk_window *win;
     NK_ASSERT(ctx);
     NK_ASSERT(ctx->current);
     NK_ASSERT(ctx->current->layout);
     if (!ctx || !ctx->current || !ctx->current->layout)
         return;
-
     win = ctx->current;
+    /* 创建横向 cols 个面板 高度是 height */
     nk_panel_layout(ctx, win, height, cols);
+    /* 根据布局类型设置 */
     if (fmt == NK_DYNAMIC)
-        win->layout->row.type = NK_LAYOUT_DYNAMIC_FIXED;
-    else win->layout->row.type = NK_LAYOUT_STATIC_FIXED;
+        win->layout->row.type = NK_LAYOUT_DYNAMIC_FIXED;/* 固定宽度 */
+    else win->layout->row.type = NK_LAYOUT_STATIC_FIXED;/* 动态宽度 */
 
     win->layout->row.ratio = 0;
     win->layout->row.filled = 0;
@@ -145,11 +150,13 @@ nk_layout_ratio_from_pixel(struct nk_context *ctx, float pixel_width)
     win = ctx->current;
     return NK_CLAMP(0.0f, pixel_width/win->bounds.x, 1.0f);
 }
+/* 自动宽度的纵向布局 */
 NK_API void
 nk_layout_row_dynamic(struct nk_context *ctx, float height, int cols)
 {
     nk_row_layout(ctx, NK_DYNAMIC, height, cols, 0);
 }
+/* 定宽度的纵向布局 */
 NK_API void
 nk_layout_row_static(struct nk_context *ctx, float height, int item_width, int cols)
 {

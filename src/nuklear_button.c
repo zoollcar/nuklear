@@ -154,6 +154,8 @@ nk_draw_button_text(struct nk_command_buffer *out,
     text.padding = nk_vec2(0,0);
     nk_widget_text(out, *content, txt, len, &text, text_alignment, font);
 }
+/* 真正的生成按钮函数 */
+/* TODO: 分析真正的生成按钮函数 */
 NK_LIB int
 nk_do_button_text(nk_flags *state,
     struct nk_command_buffer *out, struct nk_rect bounds,
@@ -428,6 +430,7 @@ nk_button_pop_behavior(struct nk_context *ctx)
     *element->address = element->old_value;
     return 1;
 }
+/* 创建文本样式按钮，主要的创建按钮函数 */
 NK_API int
 nk_button_text_styled(struct nk_context *ctx,
     const struct nk_style_button *style, const char *title, int len)
@@ -450,11 +453,13 @@ nk_button_text_styled(struct nk_context *ctx,
     state = nk_widget(&bounds, ctx);
 
     if (!state) return 0;
+    /* 真正的生成按钮 */
     in = (state == NK_WIDGET_ROM || layout->flags & NK_WINDOW_ROM) ? 0 : &ctx->input;
     return nk_do_button_text(&ctx->last_widget_state, &win->buffer, bounds,
                     title, len, style->text_alignment, ctx->button_behavior,
                     style, in, ctx->style.font);
 }
+/* 创建文本按钮 */
 NK_API int
 nk_button_text(struct nk_context *ctx, const char *title, int len)
 {
@@ -467,6 +472,7 @@ NK_API int nk_button_label_styled(struct nk_context *ctx,
 {
     return nk_button_text_styled(ctx, style, title, nk_strlen(title));
 }
+/* 创建文本按钮 */
 NK_API int nk_button_label(struct nk_context *ctx, const char *title)
 {
     return nk_button_text(ctx, title, nk_strlen(title));

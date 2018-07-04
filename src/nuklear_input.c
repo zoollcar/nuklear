@@ -16,7 +16,7 @@ nk_input_begin(struct nk_context *ctx)
     in = &ctx->input;
     for (i = 0; i < NK_BUTTON_MAX; ++i)
         in->mouse.buttons[i].clicked = 0;
-
+    /* TODO: 翻译进度5 输入部分 */
     in->keyboard.text_len = 0;
     in->mouse.scroll_delta = nk_vec2(0,0);
     in->mouse.prev.x = in->mouse.pos.x;
@@ -132,6 +132,7 @@ nk_input_has_mouse_click(const struct nk_input *i, enum nk_buttons id)
     btn = &i->mouse.buttons[id];
     return (btn->clicked && btn->down == nk_false) ? nk_true : nk_false;
 }
+/* 判断是否鼠标点击指定区域 */
 NK_API int
 nk_input_has_mouse_click_in_rect(const struct nk_input *i, enum nk_buttons id,
     struct nk_rect b)
@@ -143,12 +144,13 @@ nk_input_has_mouse_click_in_rect(const struct nk_input *i, enum nk_buttons id,
         return nk_false;
     return nk_true;
 }
+/* 判断是否鼠标左键点下指定区域 */
 NK_API int
 nk_input_has_mouse_click_down_in_rect(const struct nk_input *i, enum nk_buttons id,
     struct nk_rect b, int down)
 {
-    const struct nk_mouse_button *btn;
-    if (!i) return nk_false;
+    const struct nk_mouse_button *btn; /* 按钮状态 */
+    if (!i) return nk_false; /* 如果没有鼠标输入就返回 false */
     btn = &i->mouse.buttons[id];
     return nk_input_has_mouse_click_in_rect(i, id, b) && (btn->down == down);
 }
@@ -180,6 +182,7 @@ nk_input_any_mouse_click_in_rect(const struct nk_input *in, struct nk_rect b)
         down = down || nk_input_is_mouse_click_in_rect(in, (enum nk_buttons)i, b);
     return down;
 }
+/* 鼠标悬停在区域内 */
 NK_API int
 nk_input_is_mouse_hovering_rect(const struct nk_input *i, struct nk_rect rect)
 {

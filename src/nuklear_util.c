@@ -69,6 +69,7 @@ nk_memcopy(void *dst0, const void *src0, nk_size length)
 done:
     return (dst0);
 }
+/* 设置内存数据 */
 NK_LIB void
 nk_memset(void *ptr, int c0, nk_size size)
 {
@@ -120,6 +121,7 @@ nk_memset(void *ptr, int c0, nk_size size)
     #undef nk_wsize
     #undef nk_wmask
 }
+/* 清零 */
 NK_LIB void
 nk_zero(void *ptr, nk_size size)
 {

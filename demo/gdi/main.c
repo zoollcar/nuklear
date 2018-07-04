@@ -151,7 +151,7 @@ int main(void)
             static int property = 20;
             /* 固定小部件像素宽度（纵向布局） */
             /* 创建小部件之前使用 nk_layout_xxx 来说明后面的小部件布局 */
-            nk_layout_row_static(ctx, 30, 80, 1);
+            nk_layout_row_static(ctx, 30/* 高度 */, 80/* 元素宽度 */, 1/* 个数 */);
             if (nk_button_label(ctx, "button")){
                 /* 点击事件 */
                 fprintf(stdout, "button pressed\n");

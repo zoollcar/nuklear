@@ -15,7 +15,7 @@ extern "C" {
 #define NK_UTF_INVALID 0xFFFD /* internal invalid utf8 rune */
 #define NK_UTF_SIZE 4 /* describes the number of bytes a glyph consists of*/
 #ifndef NK_INPUT_MAX
-  #define NK_INPUT_MAX 16
+  #define NK_INPUT_MAX 16 /* 最大一次性输入数目 */
 #endif
 #ifndef NK_MAX_NUMBER_BUFFER
   #define NK_MAX_NUMBER_BUFFER 64
@@ -54,7 +54,7 @@ extern "C" {
 #define NK_INTERN static
 #define NK_STORAGE static
 #define NK_GLOBAL static
-
+/* 这个库中大多数的标志都是用这个设置的，表示二进制倒数第 x 位为1 */
 #define NK_FLAG(x) (1 << (x))
 #define NK_STRINGIFY(x) #x
 #define NK_MACRO_STRINGIFY(x) NK_STRINGIFY(x)
@@ -237,6 +237,7 @@ struct nk_style_window;
 enum {nk_false, nk_true};
 struct nk_color {nk_byte r,g,b,a;};
 struct nk_colorf {float r,g,b,a;};
+/* 二维向量 */
 struct nk_vec2 {float x,y;};
 struct nk_vec2i {short x, y;};
 struct nk_rect {float x,y,w,h;};
@@ -257,6 +258,7 @@ enum nk_chart_type      {NK_CHART_LINES, NK_CHART_COLUMN, NK_CHART_MAX};
 enum nk_chart_event     {NK_CHART_HOVERING = 0x01, NK_CHART_CLICKED = 0x02};
 enum nk_color_format    {NK_RGB, NK_RGBA};
 enum nk_popup_type      {NK_POPUP_STATIC, NK_POPUP_DYNAMIC};
+/* 布局类型 动态 静态 */
 enum nk_layout_format   {NK_DYNAMIC, NK_STATIC};
 enum nk_tree_type       {NK_TREE_NODE, NK_TREE_TAB};
 
@@ -2733,13 +2735,14 @@ NK_API int nk_list_view_begin(struct nk_context*, struct nk_list_view *out, cons
 NK_API void nk_list_view_end(struct nk_list_view*);
 /* =============================================================================
  *
- *                                  WIDGET
+ *                                  WIDGET 小部件
  *
  * ============================================================================= */
+/* 小部件显示状态 */
 enum nk_widget_layout_states {
-    NK_WIDGET_INVALID, /* The widget cannot be seen and is completely out of view */
-    NK_WIDGET_VALID, /* The widget is completely inside the window and can be updated and drawn */
-    NK_WIDGET_ROM /* The widget is partially visible and cannot be updated */
+    NK_WIDGET_INVALID, /* 这个小部件不可见，而且它完全在没在视图上 The widget cannot be seen and is completely out of view */
+    NK_WIDGET_VALID, /* 这个小部件完全在窗口内，可以被更新和绘制 The widget is completely inside the window and can be updated and drawn */
+    NK_WIDGET_ROM /* 这个小部件可见，但无法更新 The widget is partially visible and cannot be updated */
 };
 enum nk_widget_states {
     NK_WIDGET_STATE_MODIFIED    = NK_FLAG(1),
@@ -4292,11 +4295,13 @@ NK_API void nk_push_custom(struct nk_command_buffer*, struct nk_rect, nk_command
  *                          INPUT
  *
  * ===============================================================*/
+/* 鼠标按钮状态 */
 struct nk_mouse_button {
     int down;
     unsigned int clicked;
     struct nk_vec2 clicked_pos;
 };
+/* 鼠标结构体 */
 struct nk_mouse {
     struct nk_mouse_button buttons[NK_BUTTON_MAX];
     struct nk_vec2 pos;
@@ -4307,17 +4312,18 @@ struct nk_mouse {
     unsigned char grabbed;
     unsigned char ungrab;
 };
-
+/* 键的按下和点击 */
 struct nk_key {
     int down;
     unsigned int clicked;
 };
+/* 键盘结构体 */
 struct nk_keyboard {
     struct nk_key keys[NK_KEY_MAX];
     char text[NK_INPUT_MAX];
     int text_len;
 };
-
+/* 输入结构体，分为键盘和鼠标 */
 struct nk_input {
     struct nk_keyboard keyboard;
     struct nk_mouse mouse;
@@ -4940,7 +4946,7 @@ NK_API struct nk_style_item nk_style_item_hide(void);
 #ifndef NK_CHART_MAX_SLOT
 #define NK_CHART_MAX_SLOT 4
 #endif
-
+/* 面板类型 */
 enum nk_panel_type {
     NK_PANEL_NONE       = 0,
     NK_PANEL_WINDOW     = NK_FLAG(0),
@@ -5013,24 +5019,24 @@ struct nk_menu_state {
     float x, y, w, h;
     struct nk_scroll offset;
 };
-
+/* 面板结构体 */
 struct nk_panel {
-    enum nk_panel_type type;
+    enum nk_panel_type type;/* 面板类型 */
     nk_flags flags;
-    struct nk_rect bounds;
+    struct nk_rect bounds;/* 面板区域 */
     nk_uint *offset_x;
     nk_uint *offset_y;
     float at_x, at_y, max_x;
     float footer_height;
     float header_height;
     float border;
-    unsigned int has_scrolling;
+    unsigned int has_scrolling; /* 滚动 */
     struct nk_rect clip;
-    struct nk_menu_state menu;
+    struct nk_menu_state menu;/* 菜单 */
     struct nk_row_layout row;
     struct nk_chart chart;
-    struct nk_command_buffer *buffer;
-    struct nk_panel *parent;
+    struct nk_command_buffer *buffer;/* 缓冲区 */
+    struct nk_panel *parent;/* 父节点 */
 };
 
 /*==============================================================
@@ -5257,7 +5263,7 @@ struct nk_pool {
     nk_size size;
     nk_size cap;
 };
-
+/* 主环境 */
 struct nk_context {
 /* public: 下面的可以被安全的访问 can be accessed freely */
     struct nk_input input;
@@ -5292,7 +5298,9 @@ struct nk_context {
     struct nk_pool pool;
     struct nk_window *begin;
     struct nk_window *end;
+    /* 激活窗口 */
     struct nk_window *active;
+    /* 当前窗口 */
     struct nk_window *current;
     struct nk_page_element *freelist;
     unsigned int count;
@@ -5311,6 +5319,7 @@ struct nk_context {
 #define NK_LEN(a) (sizeof(a)/sizeof(a)[0])
 #define NK_ABS(a) (((a) < 0) ? -(a) : (a))
 #define NK_BETWEEN(x, a, b) ((a) <= (x) && (x) < (b))
+/* 用宏判断点是否在矩形内 */
 #define NK_INBOX(px, py, x, y, w, h)\
     (NK_BETWEEN(px,x,x+w) && NK_BETWEEN(py,y,y+h))
 #define NK_INTERSECT(x0, y0, w0, h0, x1, y1, w1, h1) \
@@ -5325,6 +5334,7 @@ struct nk_context {
 
 #define nk_ptr_add(t, p, i) ((t*)((void*)((nk_byte*)(p) + (i))))
 #define nk_ptr_add_const(t, p, i) ((const t*)((const void*)((const nk_byte*)(p) + (i))))
+/* 清空结构体 */
 #define nk_zero_struct(s) nk_zero(&s, sizeof(s))
 
 /* ==============================================================

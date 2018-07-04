@@ -230,14 +230,15 @@ nk_begin_titled(struct nk_context *ctx, const char *name, const char *title,
         ctx->current = win;
         win->layout = 0;
         return 0;
-    } else nk_start(ctx, win);/* 显示窗口， todo:将绘制命令缓冲区加入？？ */
+    } else nk_start(ctx, win);/* TODO:显示窗口， 将绘制命令缓冲区加入？？ */
 
     /* 窗口重叠 window overlapping */
+    /* 处理所有没有隐藏或是禁止输入的窗口 处理拖动和点击事件  */
     if (!(win->flags & NK_WINDOW_HIDDEN) && !(win->flags & NK_WINDOW_NO_INPUT))
     {
-        /* TODO: 翻译进度 */
         int inpanel, ishovered;
         struct nk_window *iter = win;
+        /* 这里的h 是除窗口标题栏之外的高 */
         float h = ctx->style.font->height + 2.0f * style->window.header.padding.y +
             (2.0f * style->window.header.label_padding.y);
         struct nk_rect win_bounds = (!(win->flags & NK_WINDOW_MINIMIZED))?
@@ -246,8 +247,11 @@ nk_begin_titled(struct nk_context *ctx, const char *name, const char *title,
         /* 如果窗口 hovered 并且没有其他窗口和它重叠则 激活窗口 activate window if hovered and no other window is overlapping this window */
         inpanel = nk_input_has_mouse_click_down_in_rect(&ctx->input, NK_BUTTON_LEFT, win_bounds, nk_true);
         inpanel = inpanel && ctx->input.mouse.buttons[NK_BUTTON_LEFT].clicked;
+
+        /* 下面处理长时间点下窗口 */
         ishovered = nk_input_is_mouse_hovering_rect(&ctx->input, win_bounds);
         if ((win != ctx->active) && ishovered && !ctx->input.mouse.buttons[NK_BUTTON_LEFT].down) {
+            /* TODO:为什么改变下一个的坐标？而不是当前这个 */
             iter = win->next;
             while (iter) {
                 struct nk_rect iter_bounds = (!(iter->flags & NK_WINDOW_MINIMIZED))?
@@ -266,11 +270,12 @@ nk_begin_titled(struct nk_context *ctx, const char *name, const char *title,
             }
         }
 
-        /* activate window if clicked */
+        /* 如果窗口被点击则激活窗口 activate window if clicked */
+        /* 先找到正确的 iter */
         if (iter && inpanel && (win != ctx->end)) {
             iter = win->next;
             while (iter) {
-                /* try to find a panel with higher priority in the same position */
+                /* 尝试在同一位置寻找具有更高优先级的窗口 try to find a panel with higher priority in the same position */
                 struct nk_rect iter_bounds = (!(iter->flags & NK_WINDOW_MINIMIZED))?
                 iter->bounds: nk_rect(iter->bounds.x, iter->bounds.y, iter->bounds.w, h);
                 if (NK_INBOX(ctx->input.mouse.pos.x, ctx->input.mouse.pos.y,
@@ -285,12 +290,14 @@ nk_begin_titled(struct nk_context *ctx, const char *name, const char *title,
                 iter = iter->next;
             }
         }
+        /* 然后激活窗口 */
         if (iter && !(win->flags & NK_WINDOW_ROM) && (win->flags & NK_WINDOW_BACKGROUND)) {
             win->flags |= (nk_flags)NK_WINDOW_ROM;
             iter->flags &= ~(nk_flags)NK_WINDOW_ROM;
+            /* 设置激活窗口 */
             ctx->active = iter;
             if (!(iter->flags & NK_WINDOW_BACKGROUND)) {
-                /* current window is active in that position so transfer to top
+                /* 当前位置的窗口是激活的，所以将它移动到堆栈顶端 current window is active in that position so transfer to top
                  * at the highest priority in stack */
                 nk_remove_window(ctx, iter);
                 nk_insert_window(ctx, iter, NK_INSERT_BACK);
@@ -298,7 +305,7 @@ nk_begin_titled(struct nk_context *ctx, const char *name, const char *title,
         } else {
             if (!iter && ctx->end != win) {
                 if (!(win->flags & NK_WINDOW_BACKGROUND)) {
-                    /* current window is active in that position so transfer to top
+                    /* 当前位置的窗口是激活的，所以将它移动到堆栈顶端 current window is active in that position so transfer to top
                      * at the highest priority in stack */
                     nk_remove_window(ctx, win);
                     nk_insert_window(ctx, win, NK_INSERT_BACK);
@@ -316,6 +323,7 @@ nk_begin_titled(struct nk_context *ctx, const char *name, const char *title,
     win->layout->offset_x = &win->scrollbar.x;
     win->layout->offset_y = &win->scrollbar.y;
     return ret;
+    /* TODO: 上下文 nk_context ， 窗口 nk_window ， 面板 panel 的关系 */
 }
 NK_API void
 nk_end(struct nk_context *ctx)

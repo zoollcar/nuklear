@@ -7,11 +7,11 @@
  *
  * ===============================================================*/
 /* 创建一个页面元素 */
-/* TODO: 如何创建一个页面元素的 */
 NK_LIB struct nk_page_element*
 nk_create_page_element(struct nk_context *ctx)
 {
     struct nk_page_element *elem;
+    /* TODO: 创建一个页面元素的两种特殊情况 */
     if (ctx->freelist) {
         /* unlink page element from free list */
         elem = ctx->freelist;
@@ -22,7 +22,8 @@ nk_create_page_element(struct nk_context *ctx)
         NK_ASSERT(elem);
         if (!elem) return 0;
     } else {
-        /* allocate new page element from back of fixed size memory buffer */
+        /* 从固定大小内存缓冲区的后面分配新的页面元素 allocate new page element from back of fixed size memory buffer */
+        /* TODO: 后面看不懂 */
         NK_STORAGE const nk_size size = sizeof(struct nk_page_element);
         NK_STORAGE const nk_size align = NK_ALIGNOF(struct nk_page_element);
         elem = (struct nk_page_element*)nk_buffer_alloc(&ctx->memory, NK_BUFFER_BACK, size, align);
