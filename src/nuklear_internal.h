@@ -230,11 +230,11 @@ NK_LIB void nk_layout_peek(struct nk_rect *bounds, struct nk_context *ctx);
 /* popup */
 NK_LIB int nk_nonblock_begin(struct nk_context *ctx, nk_flags flags, struct nk_rect body, struct nk_rect header, enum nk_panel_type panel_type);
 
-/* text */
+/* 文字结构体 text */
 struct nk_text {
     struct nk_vec2 padding;
-    struct nk_color background;
-    struct nk_color text;
+    struct nk_color background; /* 背景色 */
+    struct nk_color text; /* 文字颜色 */
 };
 NK_LIB void nk_widget_text(struct nk_command_buffer *o, struct nk_rect b, const char *string, int len, const struct nk_text *t, nk_flags a, const struct nk_user_font *f);
 NK_LIB void nk_widget_text_wrap(struct nk_command_buffer *o, struct nk_rect b, const char *string, int len, const struct nk_text *t, const struct nk_user_font *f);

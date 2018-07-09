@@ -3801,11 +3801,11 @@ enum nk_allocation_type {
     NK_BUFFER_FIXED,
     NK_BUFFER_DYNAMIC
 };
-
+/* 缓冲区分配类型 */
 enum nk_buffer_allocation_type {
-    NK_BUFFER_FRONT,
-    NK_BUFFER_BACK,
-    NK_BUFFER_MAX
+    NK_BUFFER_FRONT, /* 前向 */
+    NK_BUFFER_BACK, /* 后向 */
+    NK_BUFFER_MAX /* 最大值 */
 };
 
 struct nk_buffer_marker {
@@ -4023,7 +4023,7 @@ NK_API void nk_textedit_redo(struct nk_text_edit*);
 
 /* ===============================================================
  *
- *                          DRAWING
+ *                          DRAWING 绘制
  *
  * ===============================================================*/
 /*  This library was designed to be render backend agnostic so it does
@@ -4070,13 +4070,14 @@ NK_API void nk_textedit_redo(struct nk_text_edit*);
     update and draw your widget. The reason for separating is to only draw and
     update what is actually necessary which is crucial for performance.
 */
+/* 命令缓冲区，命令类型 */
 enum nk_command_type {
     NK_COMMAND_NOP,
     NK_COMMAND_SCISSOR,
     NK_COMMAND_LINE,
     NK_COMMAND_CURVE,
     NK_COMMAND_RECT,
-    NK_COMMAND_RECT_FILLED,
+    NK_COMMAND_RECT_FILLED, /* 绘制填充矩形 */
     NK_COMMAND_RECT_MULTI_COLOR,
     NK_COMMAND_CIRCLE,
     NK_COMMAND_CIRCLE_FILLED,
@@ -4509,7 +4510,7 @@ union nk_style_item_data {
     struct nk_image image;
     struct nk_color color;
 };
-
+/* 颜色或图片中的一项 */
 struct nk_style_item {
     enum nk_style_item_type type;
     union nk_style_item_data data;
@@ -4520,28 +4521,30 @@ struct nk_style_text {
     struct nk_vec2 padding;
 };
 
+/* 按钮样式 */
 struct nk_style_button {
-    /* background */
-    struct nk_style_item normal;
-    struct nk_style_item hover;
-    struct nk_style_item active;
-    struct nk_color border_color;
+    /* 背景 background */
+    struct nk_style_item normal; /* 正常 */
+    struct nk_style_item hover; /* 经过 */
+    struct nk_style_item active; /* 点击 */
+    struct nk_color border_color; /* 描边颜色 */
 
-    /* text */
-    struct nk_color text_background;
+    /* 文字 text */
+    struct nk_color text_background; /* 背景 */
     struct nk_color text_normal;
     struct nk_color text_hover;
     struct nk_color text_active;
-    nk_flags text_alignment;
+    nk_flags text_alignment; /* 对齐方式 */
 
-    /* properties */
-    float border;
-    float rounding;
+    /* 属性 properties */
+    float border; /* 边界 */
+    float rounding; /* TODO: 一个按钮属性 */
     struct nk_vec2 padding;
     struct nk_vec2 image_padding;
     struct nk_vec2 touch_padding;
 
-    /* optional user callbacks */
+    /* 可选的用户回调 optional user callbacks */
+    /* 绘制开始的回调，绘制完成的回调 */
     nk_handle userdata;
     void(*draw_begin)(struct nk_command_buffer*, nk_handle userdata);
     void(*draw_end)(struct nk_command_buffer*, nk_handle userdata);
@@ -5331,7 +5334,7 @@ struct nk_context {
 #define nk_vec2_add(a, b) nk_vec2((a).x + (b).x, (a).y + (b).y)
 #define nk_vec2_len_sqr(a) ((a).x*(a).x+(a).y*(a).y)
 #define nk_vec2_muls(a, t) nk_vec2((a).x * (t), (a).y * (t))
-
+/* 指针地址相加 */
 #define nk_ptr_add(t, p, i) ((t*)((void*)((nk_byte*)(p) + (i))))
 #define nk_ptr_add_const(t, p, i) ((const t*)((const void*)((const nk_byte*)(p) + (i))))
 /* 清空结构体 */
@@ -5354,7 +5357,7 @@ struct nk_context {
 # define NK_UINT_TO_PTR(x) ((void*)(x))
 # define NK_PTR_TO_UINT(x) ((nk_size)(x))
 #endif
-
+/* 指针对齐 */
 #define NK_ALIGN_PTR(x, mask)\
     (NK_UINT_TO_PTR((NK_PTR_TO_UINT((nk_byte*)(x) + (mask-1)) & ~(mask-1))))
 #define NK_ALIGN_PTR_BACK(x, mask)\

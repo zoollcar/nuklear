@@ -3,7 +3,7 @@
 
 /* ==============================================================
  *
- *                          BUTTON
+ *                          BUTTON 按钮
  *
  * ===============================================================*/
 NK_LIB void
@@ -59,6 +59,7 @@ nk_draw_symbol(struct nk_command_buffer *out, enum nk_symbol_type type,
     case NK_SYMBOL_MAX: break;
     }
 }
+/* 执行按钮行为，返回是否按下按钮 */
 NK_LIB int
 nk_button_behavior(nk_flags *state, struct nk_rect r,
     const struct nk_input *i, enum nk_button_behavior behavior)
@@ -67,10 +68,13 @@ nk_button_behavior(nk_flags *state, struct nk_rect r,
     nk_widget_state_reset(state);
     if (!i) return 0;
     if (nk_input_is_mouse_hovering_rect(i, r)) {
+        /* 鼠标经过按钮，按钮进入 hover 状态 */
         *state = NK_WIDGET_STATE_HOVERED;
         if (nk_input_is_mouse_down(i, NK_BUTTON_LEFT))
+        /* 鼠标按下按钮，按钮进入激活状态 */
             *state = NK_WIDGET_STATE_ACTIVE;
         if (nk_input_has_mouse_click_in_rect(i, NK_BUTTON_LEFT, r)) {
+            /* 根据用户设置，在不同时间返回点击事件 */
             ret = (behavior != NK_BUTTON_DEFAULT) ?
                 nk_input_is_mouse_down(i, NK_BUTTON_LEFT):
 #ifdef NK_BUTTON_TRIGGER_ON_RELEASE
@@ -86,6 +90,7 @@ nk_button_behavior(nk_flags *state, struct nk_rect r,
         *state |= NK_WIDGET_STATE_LEFT;
     return ret;
 }
+/* 真正绘制按钮 外观 */
 NK_LIB const struct nk_style_item*
 nk_draw_button(struct nk_command_buffer *out,
     const struct nk_rect *bounds, nk_flags state,
@@ -99,13 +104,16 @@ nk_draw_button(struct nk_command_buffer *out,
     else background = &style->normal;
 
     if (background->type == NK_STYLE_ITEM_IMAGE) {
+        /* 如果是图片背景，就绘制图片 */
         nk_draw_image(out, *bounds, &background->data.image, nk_white);
     } else {
+        /* 否则绘制矩形 */
         nk_fill_rect(out, *bounds, style->rounding, background->data.color);
         nk_stroke_rect(out, *bounds, style->rounding, style->border, style->border_color);
     }
     return background;
 }
+/* 计算和返回按钮点击事件 */
 NK_LIB int
 nk_do_button(nk_flags *state, struct nk_command_buffer *out, struct nk_rect r,
     const struct nk_style_button *style, const struct nk_input *in,
@@ -118,19 +126,20 @@ nk_do_button(nk_flags *state, struct nk_command_buffer *out, struct nk_rect r,
     if (!out || !style)
         return nk_false;
 
-    /* calculate button content space */
+    /* 计算按钮中心区域 calculate button content space */
     content->x = r.x + style->padding.x + style->border + style->rounding;
     content->y = r.y + style->padding.y + style->border + style->rounding;
     content->w = r.w - (2 * style->padding.x + style->border + style->rounding*2);
     content->h = r.h - (2 * style->padding.y + style->border + style->rounding*2);
 
-    /* execute button behavior */
+    /* 执行按钮行为 execute button behavior */
     bounds.x = r.x - style->touch_padding.x;
     bounds.y = r.y - style->touch_padding.y;
     bounds.w = r.w + 2 * style->touch_padding.x;
     bounds.h = r.h + 2 * style->touch_padding.y;
     return nk_button_behavior(state, bounds, in, behavior);
 }
+/* 绘制按钮，生成按钮上的文字 */
 NK_LIB void
 nk_draw_button_text(struct nk_command_buffer *out,
     const struct nk_rect *bounds, const struct nk_rect *content, nk_flags state,
@@ -139,9 +148,10 @@ nk_draw_button_text(struct nk_command_buffer *out,
 {
     struct nk_text text;
     const struct nk_style_item *background;
+    /* 绘制按钮 */
     background = nk_draw_button(out, bounds, state, style);
 
-    /* select correct colors/images */
+    /* 选择正确的颜色或图片 select correct colors/images */
     if (background->type == NK_STYLE_ITEM_COLOR)
         text.background = background->data.color;
     else text.background = style->text_background;
@@ -152,10 +162,10 @@ nk_draw_button_text(struct nk_command_buffer *out,
     else text.text = style->text_normal;
 
     text.padding = nk_vec2(0,0);
+    /* 绘制按钮文字 */
     nk_widget_text(out, *content, txt, len, &text, text_alignment, font);
 }
-/* 真正的生成按钮函数 */
-/* TODO: 分析真正的生成按钮函数 */
+/* 生成文字按钮 */
 NK_LIB int
 nk_do_button_text(nk_flags *state,
     struct nk_command_buffer *out, struct nk_rect bounds,
@@ -174,10 +184,12 @@ nk_do_button_text(nk_flags *state,
     if (!out || !style || !font || !string)
         return nk_false;
 
+    /* 计算和返回按钮点击事件 */
     ret = nk_do_button(state, out, bounds, style, in, behavior, &content);
-    if (style->draw_begin) style->draw_begin(out, style->userdata);
+    if (style->draw_begin) style->draw_begin(out, style->userdata);/* 绘制开始的回调 */
+    /* 绘制按钮，生成按钮文字 */
     nk_draw_button_text(out, &bounds, &content, *state, style, string, len, align, font);
-    if (style->draw_end) style->draw_end(out, style->userdata);
+    if (style->draw_end) style->draw_end(out, style->userdata);/* 绘制完成的回调 */
     return ret;
 }
 NK_LIB void

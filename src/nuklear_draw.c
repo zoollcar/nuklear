@@ -35,6 +35,7 @@ nk_command_buffer_reset(struct nk_command_buffer *b)
     b->userdata.ptr = 0;
 #endif
 }
+/* 将命令加入到命令缓冲  后面所有的绘制命令都用这个 */
 NK_LIB void*
 nk_command_buffer_push(struct nk_command_buffer* b,
     enum nk_command_type t, nk_size size)
@@ -48,10 +49,11 @@ nk_command_buffer_push(struct nk_command_buffer* b,
     NK_ASSERT(b);
     NK_ASSERT(b->base);
     if (!b) return 0;
+    /* 新建一块缓冲区区域，用来将命令加入缓冲区 */
     cmd = (struct nk_command*)nk_buffer_alloc(b->base,NK_BUFFER_FRONT,size,align);
     if (!cmd) return 0;
 
-    /* make sure the offset to the next command is aligned */
+    /* 确保下一命令的偏移量是对齐的 make sure the offset to the next command is aligned */
     b->last = (nk_size)((nk_byte*)cmd - (nk_byte*)b->base->memory.ptr);
     unaligned = (nk_byte*)cmd + size;
     memory = NK_ALIGN_PTR(unaligned, align);
@@ -66,6 +68,7 @@ nk_command_buffer_push(struct nk_command_buffer* b,
     cmd->userdata = b->userdata;
 #endif
     b->end = cmd->next;
+    /* 返回建好的新命令指针 */
     return cmd;
 }
 NK_API void
@@ -128,6 +131,7 @@ nk_stroke_curve(struct nk_command_buffer *b, float ax, float ay,
     cmd->end.y = (short)by;
     cmd->color = col;
 }
+/* 绘制矩形边框 */
 NK_API void
 nk_stroke_rect(struct nk_command_buffer *b, struct nk_rect rect,
     float rounding, float line_thickness, struct nk_color c)
@@ -151,7 +155,7 @@ nk_stroke_rect(struct nk_command_buffer *b, struct nk_rect rect,
     cmd->h = (unsigned short)NK_MAX(0, rect.h);
     cmd->color = c;
 }
-/* 填充区域？？？ */
+/* 绘制矩形 */
 NK_API void
 nk_fill_rect(struct nk_command_buffer *b, struct nk_rect rect,
     float rounding, struct nk_color c)
@@ -164,7 +168,7 @@ nk_fill_rect(struct nk_command_buffer *b, struct nk_rect rect,
         if (!NK_INTERSECT(rect.x, rect.y, rect.w, rect.h,
             clip->x, clip->y, clip->w, clip->h)) return;
     }
-
+    /* 将绘制命令放入命令缓冲区中，先放入再设置属性 */
     cmd = (struct nk_command_rect_filled*)
         nk_command_buffer_push(b, NK_COMMAND_RECT_FILLED, sizeof(*cmd));
     if (!cmd) return;
@@ -395,6 +399,7 @@ nk_stroke_polyline(struct nk_command_buffer *b, float *points, int point_count,
         cmd->points[i].y = (short)points[i*2+1];
     }
 }
+/* 绘制图片 */
 NK_API void
 nk_draw_image(struct nk_command_buffer *b, struct nk_rect r,
     const struct nk_image *img, struct nk_color col)
@@ -441,6 +446,7 @@ nk_push_custom(struct nk_command_buffer *b, struct nk_rect r,
     cmd->callback_data = usr;
     cmd->callback = cb;
 }
+/* 绘制文字 */
 NK_API void
 nk_draw_text(struct nk_command_buffer *b, struct nk_rect r,
     const char *string, int length, const struct nk_user_font *font,

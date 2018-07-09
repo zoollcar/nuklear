@@ -6,6 +6,7 @@
  *                              TEXT
  *
  * ===============================================================*/
+/* TODO: 绘制文字 */
 NK_LIB void
 nk_widget_text(struct nk_command_buffer *o, struct nk_rect b,
     const char *string, int len, const struct nk_text *t,

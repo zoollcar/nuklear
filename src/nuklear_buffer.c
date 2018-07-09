@@ -30,7 +30,7 @@ nk_buffer_init_default(struct nk_buffer *buffer)
     nk_buffer_init(buffer, &alloc, NK_BUFFER_DEFAULT_INITIAL_SIZE);
 }
 #endif
-
+/* 初始化缓冲区 */
 NK_API void
 nk_buffer_init(struct nk_buffer *b, const struct nk_allocator *a,
     nk_size initial_size)
@@ -130,7 +130,7 @@ nk_buffer_realloc(struct nk_buffer *b, nk_size capacity, nk_size *size)
     }
     return temp;
 }
-/* 缓冲区对齐？？ */
+/* 新建一块缓冲区区域 */
 NK_LIB void*
 nk_buffer_alloc(struct nk_buffer *b, enum nk_buffer_allocation_type type,
     nk_size size, nk_size align)
@@ -145,13 +145,14 @@ nk_buffer_alloc(struct nk_buffer *b, enum nk_buffer_allocation_type type,
     if (!b || !size) return 0;
     b->needed += size;
 
-    /* calculate total size with needed alignment + size */
+    /* 根据需要计算总大小  对齐方式+大小 calculate total size with needed alignment + size */
     if (type == NK_BUFFER_FRONT)
         unaligned = nk_ptr_add(void, b->memory.ptr, b->allocated);
     else unaligned = nk_ptr_add(void, b->memory.ptr, b->size - size);
+    /* 返回开头或结尾的指针 */
     memory = nk_buffer_align(unaligned, align, &alignment, type);
 
-    /* check if buffer has enough memory*/
+    /* 检查缓冲区是否拥有足够的空间 check if buffer has enough memory*/
     if (type == NK_BUFFER_FRONT)
         full = ((b->allocated + size + alignment) > b->size);
     else full = ((b->size - NK_MIN(b->size,(size + alignment))) <= b->allocated);
@@ -164,13 +165,13 @@ nk_buffer_alloc(struct nk_buffer *b, enum nk_buffer_allocation_type type,
         if (b->type != NK_BUFFER_DYNAMIC || !b->pool.alloc || !b->pool.free)
             return 0;
 
-        /* buffer is full so allocate bigger buffer if dynamic */
+        /* 缓冲区满了，所以要动态分配更大的缓冲区 buffer is full so allocate bigger buffer if dynamic */
         capacity = (nk_size)((float)b->memory.size * b->grow_factor);
         capacity = NK_MAX(capacity, nk_round_up_pow2((nk_uint)(b->allocated + size)));
         b->memory.ptr = nk_buffer_realloc(b, capacity, &b->memory.size);
         if (!b->memory.ptr) return 0;
 
-        /* align newly allocated pointer */
+        /* 对齐新分配的指针 align newly allocated pointer */
         if (type == NK_BUFFER_FRONT)
             unaligned = nk_ptr_add(void, b->memory.ptr, b->allocated);
         else unaligned = nk_ptr_add(void, b->memory.ptr, b->size - size);
