@@ -979,6 +979,8 @@ NK_API const struct nk_command* nk__next(struct nk_context*, const struct nk_com
 ///
 /// Returns draw command pointer pointing to the next command inside the draw command list
 */
+
+/* 用来遍历在渲染器后台中遍历 ctx 渲染命令 */
 #define nk_foreach(c, ctx) for((c) = nk__begin(ctx); (c) != 0; (c) = nk__next(ctx,c))
 #ifdef NK_INCLUDE_VERTEX_BUFFER_OUTPUT
 /*/// #### nk_convert
@@ -4258,7 +4260,7 @@ enum nk_command_clipping {
     NK_CLIPPING_OFF = nk_false,
     NK_CLIPPING_ON = nk_true
 };
-
+/* 命令缓冲区结构体 */
 struct nk_command_buffer {
     struct nk_buffer *base;
     struct nk_rect clip;
@@ -4538,7 +4540,7 @@ struct nk_style_button {
 
     /* 属性 properties */
     float border; /* 边界 */
-    float rounding; /* TODO: 一个按钮属性 */
+    float rounding;
     struct nk_vec2 padding;
     struct nk_vec2 image_padding;
     struct nk_vec2 touch_padding;
@@ -5092,7 +5094,7 @@ struct nk_edit_state {
     unsigned char mode;
     unsigned char single_line;
 };
-
+/* 属性状态 */
 struct nk_property_state {
     int active, prev;
     char buffer[NK_MAX_NUMBER_BUFFER];
@@ -5108,26 +5110,26 @@ struct nk_property_state {
 
 struct nk_window {
     unsigned int seq;
-    nk_hash name;
-    char name_string[NK_WINDOW_MAX_NAME];
-    nk_flags flags;
+    nk_hash name; /* 名字的hash */
+    char name_string[NK_WINDOW_MAX_NAME]; /* 名字字符串 */
+    nk_flags flags; /* 窗口标志 */
 
-    struct nk_rect bounds;
-    struct nk_scroll scrollbar;
-    struct nk_command_buffer buffer;
-    struct nk_panel *layout;
-    float scrollbar_hiding_timer;
+    struct nk_rect bounds; /* 窗口区域 */
+    struct nk_scroll scrollbar; /* 滚动条 */
+    struct nk_command_buffer buffer; /* 命令缓冲区 */
+    struct nk_panel *layout; /* 面板链表头 */
+    float scrollbar_hiding_timer; /* 滚动条以显示时间，用于自动隐藏滚动条 */
 
     /* persistent widget state 持久的小部件状态 */
-    struct nk_property_state property;
-    struct nk_popup_state popup;
-    struct nk_edit_state edit;
-    unsigned int scrolled;
+    struct nk_property_state property; /* 属性状态 */
+    struct nk_popup_state popup; /* 弹出状态 */
+    struct nk_edit_state edit; /* 编辑状态 */
+    unsigned int scrolled; /* 滚动 */
 
     struct nk_table *tables;
     unsigned int table_count;
 
-    /* window list hooks */
+    /* window list hooks 窗口链表 */
     struct nk_window *next;
     struct nk_window *prev;
     struct nk_window *parent;
@@ -5266,17 +5268,17 @@ struct nk_pool {
     nk_size size;
     nk_size cap;
 };
-/* 主环境 */
+/* 主环境 上下文 */
 struct nk_context {
 /* public: 下面的可以被安全的访问 can be accessed freely */
-    struct nk_input input;
-    struct nk_style style;
-    struct nk_buffer memory;
-    struct nk_clipboard clip;
-    nk_flags last_widget_state;
-    enum nk_button_behavior button_behavior;
+    struct nk_input input; /* 输入 */
+    struct nk_style style; /* 样式 */
+    struct nk_buffer memory; /* 缓冲区 */
+    struct nk_clipboard clip;  /* 剪切板 */
+    nk_flags last_widget_state;  /* 最近一个小部件状态 */
+    enum nk_button_behavior button_behavior; /* 按钮行为是默认还是被替换的 */
     struct nk_configuration_stacks stacks;
-    float delta_time_seconds;
+    float delta_time_seconds; /* 时间（秒） */
 
 /* private: 下面的只有在了解后才能访问
     should only be accessed if you
@@ -5287,9 +5289,9 @@ struct nk_context {
 #ifdef NK_INCLUDE_COMMAND_USERDATA
     nk_handle userdata;
 #endif
-    /* text editor objects are quite big because of an internal
-     * undo/redo stack. Therefore it does not make sense to have one for
-     * each window for temporary use cases, so I only provide *one* instance
+    /* 文本编辑器因为内部的 撤销/重做 而过于庞大 text editor objects are quite big because of an internal
+     * 没有必要每个窗口都有一个，这里只有一个实例 undo/redo stack. Therefore it does not make sense to have one for
+     * 这将导致其内容无论如何都会被清除 each window for temporary use cases, so I only provide *one* instance
      * for all windows. This works because the content is cleared anyway */
     struct nk_text_edit text_edit;
     /* draw buffer used for overlay drawing operation like cursor */
@@ -5298,20 +5300,18 @@ struct nk_context {
     /* windows 窗口们 */
     int build;
     int use_pool;
-    struct nk_pool pool;
-    struct nk_window *begin;
+    struct nk_pool pool; 
+    struct nk_window *begin; /* 窗口链表 */
     struct nk_window *end;
-    /* 激活窗口 */
-    struct nk_window *active;
-    /* 当前窗口 */
-    struct nk_window *current;
+    struct nk_window *active; /* 激活窗口 */
+    struct nk_window *current; /* 当前窗口 */
     struct nk_page_element *freelist;
     unsigned int count;
     unsigned int seq;
 };
 
 /* ==============================================================
- *                          MATH
+ *                          MATH 数学
  * =============================================================== */
 #define NK_PI 3.141592654f
 #define NK_UTF_INVALID 0xFFFD
@@ -5341,7 +5341,7 @@ struct nk_context {
 #define nk_zero_struct(s) nk_zero(&s, sizeof(s))
 
 /* ==============================================================
- *                          ALIGNMENT
+ *                          ALIGNMENT 对齐
  * =============================================================== */
 /* Pointer to Integer type conversion for pointer alignment */
 #if defined(__PTRDIFF_TYPE__) /* This case should work for GCC*/

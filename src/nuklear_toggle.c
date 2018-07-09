@@ -3,7 +3,7 @@
 
 /* ===============================================================
  *
- *                              TOGGLE
+ *                              TOGGLE 切换型小部件
  *
  * ===============================================================*/
 NK_LIB int
@@ -21,6 +21,8 @@ nk_toggle_behavior(const struct nk_input *in, struct nk_rect select,
         *state |= NK_WIDGET_STATE_LEFT;
     return active;
 }
+/* 绘制多选按钮 */
+/* TODO: 绘制多选按钮 */
 NK_LIB void
 nk_draw_checkbox(struct nk_command_buffer *out,
     nk_flags state, const struct nk_style_toggle *style, int active,
@@ -47,7 +49,7 @@ nk_draw_checkbox(struct nk_command_buffer *out,
         text.text = style->text_normal;
     }
 
-    /* draw background and cursor */
+    /* 绘制背景和光标 draw background and cursor */
     if (background->type == NK_STYLE_ITEM_COLOR) {
         nk_fill_rect(out, *selector, 0, style->border_color);
         nk_fill_rect(out, nk_shrink_rect(*selector, style->border), 0, background->data.color);
@@ -61,8 +63,11 @@ nk_draw_checkbox(struct nk_command_buffer *out,
     text.padding.x = 0;
     text.padding.y = 0;
     text.background = style->text_background;
+    /* 绘制文字 */
     nk_widget_text(out, *label, string, len, &text, NK_TEXT_LEFT, font);
 }
+/* 绘制单选按钮 */
+/* TODO: 绘制单选按钮 */
 NK_LIB void
 nk_draw_option(struct nk_command_buffer *out,
     nk_flags state, const struct nk_style_toggle *style, int active,
@@ -105,6 +110,7 @@ nk_draw_option(struct nk_command_buffer *out,
     text.background = style->text_background;
     nk_widget_text(out, *label, string, len, &text, NK_TEXT_LEFT, font);
 }
+/* 真正绘制选择器小部件 */
 NK_LIB int
 nk_do_toggle(nk_flags *state,
     struct nk_command_buffer *out, struct nk_rect r,
@@ -127,40 +133,43 @@ nk_do_toggle(nk_flags *state,
     r.w = NK_MAX(r.w, font->height + 2 * style->padding.x);
     r.h = NK_MAX(r.h, font->height + 2 * style->padding.y);
 
-    /* add additional touch padding for touch screen devices */
+    /* 为触摸屏设备添加触摸屏设备支持 add additional touch padding for touch screen devices */
     bounds.x = r.x - style->touch_padding.x;
     bounds.y = r.y - style->touch_padding.y;
     bounds.w = r.w + 2 * style->touch_padding.x;
     bounds.h = r.h + 2 * style->touch_padding.y;
 
-    /* calculate the selector space */
+    /* 计算选择器需要的空间 calculate the selector space */
     select.w = font->height;
     select.h = select.w;
     select.y = r.y + r.h/2.0f - select.h/2.0f;
     select.x = r.x;
 
-    /* calculate the bounds of the cursor inside the selector */
+    /* 计算光标在选择器内的边界 calculate the bounds of the cursor inside the selector */
     cursor.x = select.x + style->padding.x + style->border;
     cursor.y = select.y + style->padding.y + style->border;
     cursor.w = select.w - (2 * style->padding.x + 2 * style->border);
     cursor.h = select.h - (2 * style->padding.y + 2 * style->border);
 
-    /* label behind the selector */
+    /* 选择器后面的标签位置 label behind the selector */
     label.x = select.x + select.w + style->spacing;
     label.y = select.y;
     label.w = NK_MAX(r.x + r.w, label.x) - label.x;
     label.h = select.w;
 
-    /* update selector */
+    /* 更新选择器状态 update selector */
     was_active = *active;
     *active = nk_toggle_behavior(in, bounds, state, *active);
 
-    /* draw selector */
+    /* 绘制选择器 draw selector */
     if (style->draw_begin)
         style->draw_begin(out, style->userdata);
     if (type == NK_TOGGLE_CHECK) {
+        /* TODO: 翻译进度4 选择器小部件*/
+        /* 绘制多选按钮 */
         nk_draw_checkbox(out, *state, style, *active, &label, &select, &cursor, str, len, font);
     } else {
+        /* 绘制单选选项 */
         nk_draw_option(out, *state, style, *active, &label, &select, &cursor, str, len, font);
     }
     if (style->draw_end)
@@ -267,11 +276,10 @@ NK_API int nk_checkbox_flags_label(struct nk_context *ctx, const char *label,
  *                          OPTION
  *
  * --------------------------------------------------------------*/
-/* 创建文字样式单选按钮 */
+/* 创建文字样式选择器小部件 */
 NK_API int
 nk_option_text(struct nk_context *ctx, const char *text, int len, int is_active)
 {
-    /* TODO: 翻译进度4 单选按钮*/
     struct nk_window *win;
     struct nk_panel *layout;
     const struct nk_input *in;
@@ -293,6 +301,7 @@ nk_option_text(struct nk_context *ctx, const char *text, int len, int is_active)
     state = nk_widget(&bounds, ctx);
     if (!state) return (int)state;
     in = (state == NK_WIDGET_ROM || layout->flags & NK_WINDOW_ROM) ? 0 : &ctx->input;
+    /* 创建和绘制选择器小部件 */
     nk_do_toggle(&ctx->last_widget_state, &win->buffer, bounds, &is_active,
         text, len, NK_TOGGLE_OPTION, &style->option, in, style->font);
     return is_active;

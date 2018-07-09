@@ -323,7 +323,6 @@ nk_begin_titled(struct nk_context *ctx, const char *name, const char *title,
     win->layout->offset_x = &win->scrollbar.x;
     win->layout->offset_y = &win->scrollbar.y;
     return ret;
-    /* TODO: 上下文 nk_context ， 窗口 nk_window ， 面板 panel 的关系 */
 }
 NK_API void
 nk_end(struct nk_context *ctx)

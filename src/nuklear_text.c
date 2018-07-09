@@ -6,7 +6,7 @@
  *                              TEXT
  *
  * ===============================================================*/
-/* TODO: 绘制文字 */
+/* 绘制小部件文字 */
 NK_LIB void
 nk_widget_text(struct nk_command_buffer *o, struct nk_rect b,
     const char *string, int len, const struct nk_text *t,
@@ -27,7 +27,7 @@ nk_widget_text(struct nk_command_buffer *o, struct nk_rect b,
     text_width = f->width(f->userdata, f->height, (const char*)string, len);
     text_width += (2.0f * t->padding.x);
 
-    /* align in x-axis */
+    /* 对齐在x轴 align in x-axis */
     if (a & NK_TEXT_ALIGN_LEFT) {
         label.x = b.x + t->padding.x;
         label.w = NK_MAX(0, b.w - 2 * t->padding.x);
@@ -42,7 +42,7 @@ nk_widget_text(struct nk_command_buffer *o, struct nk_rect b,
         label.w = (float)text_width + 2 * t->padding.x;
     } else return;
 
-    /* align in y-axis */
+    /* 对齐在y轴 align in y-axis */
     if (a & NK_TEXT_ALIGN_MIDDLE) {
         label.y = b.y + b.h/2.0f - (float)f->height/2.0f;
         label.h = NK_MAX(b.h/2.0f, b.h - (b.h/2.0f + f->height/2.0f));

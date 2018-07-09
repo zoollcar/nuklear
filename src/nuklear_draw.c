@@ -400,6 +400,7 @@ nk_stroke_polyline(struct nk_command_buffer *b, float *points, int point_count,
     }
 }
 /* 绘制图片 */
+/* TODO: 绘制图片 */
 NK_API void
 nk_draw_image(struct nk_command_buffer *b, struct nk_rect r,
     const struct nk_image *img, struct nk_color col)
@@ -464,7 +465,7 @@ nk_draw_text(struct nk_command_buffer *b, struct nk_rect r,
             return;
     }
 
-    /* make sure text fits inside bounds */
+    /* 确保字号在区域内 make sure text fits inside bounds */
     text_width = font->width(font->userdata, font->height, string, length);
     if (text_width > r.w){
         int glyphs = 0;
@@ -473,6 +474,7 @@ nk_draw_text(struct nk_command_buffer *b, struct nk_rect r,
     }
 
     if (!length) return;
+    /* 添加到命令缓冲区 */
     cmd = (struct nk_command_text*)
         nk_command_buffer_push(b, NK_COMMAND_TEXT, sizeof(*cmd) + (nk_size)(length + 1));
     if (!cmd) return;
