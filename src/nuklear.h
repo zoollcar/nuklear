@@ -243,7 +243,9 @@ struct nk_vec2i {short x, y;};
 struct nk_rect {float x,y,w,h;};
 struct nk_recti {short x,y,w,h;};
 typedef char nk_glyph[NK_UTF_SIZE];
+/* ptr是资源句柄 */
 typedef union {void *ptr; int id;} nk_handle;
+/* 图片结构体 */
 struct nk_image {nk_handle handle;unsigned short w,h;unsigned short region[4];};
 struct nk_cursor {struct nk_image img; struct nk_vec2 size, offset;};
 struct nk_scroll {nk_uint x, y;};
@@ -297,7 +299,7 @@ enum nk_symbol_type {
 /*/// ### Context 上下文
 /// Context 是主入口 是 nuklear 的核心，它包含所有需要的东西.
 /// Context 被 window, memory, input, style, stack, commands 和 time 管理
-/// 需要别导入到一切 GUI 函数中
+/// Context 需要被导入到一切 GUI 函数中
 ///
 /// #### 用法
 /// 要使用 context 需要使用如下函数初始化
@@ -320,17 +322,17 @@ enum nk_symbol_type {
 /// 函数            | 描述
 /// --------------------|-------------------------------------------------------
 /// __nk_init_default__ | 使用标准库内存函数初始化 context (malloc,free)
-/// __nk_init_fixed__   | 适用固定大小的内存块初始化 context
-/// __nk_init__         | Initializes context with memory allocator callbacks for alloc and free
-/// __nk_init_custom__  | Initializes context from two buffers. One for draw commands the other for window/panel/table allocations
+/// __nk_init_fixed__   | 使用固定大小的内存块初始化 context
+/// __nk_init__         | 使用 memory allocator 初始化 context
+/// __nk_init_custom__  | 使用两个缓冲区初始化 context ，一个用于绘制命令另一个用于窗口/面板/表（window/panel/table）的分配
 /// __nk_clear__        | 在当前帧的最后调用来初始化和准备下一帧
 /// __nk_free__         | 关闭和释放这个 context 所有的内存
 /// __nk_set_user_data__| Utility function to pass user data to draw command
  */
 #ifdef NK_INCLUDE_DEFAULT_ALLOCATOR
 /*/// #### nk_init_default
-/// Initializes a `nk_context` struct with a default standard library allocator.
-/// Should be used if you don't want to be bothered with memory management in nuklear.
+/// 使用标准库内存函数初始化一个 `nk_context`.
+/// 如果您不想被 nuklear 中的 memory management （内存管理器）所困扰, 应使用该功能。
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// int nk_init_default(struct nk_context *ctx, const struct nk_user_font *font);
@@ -338,8 +340,8 @@ enum nk_symbol_type {
 ///
 /// 参数   | 描述
 /// ------------|---------------------------------------------------------------
-/// __ctx__     | Must point to an either stack or heap allocated `nk_context` struct
-/// __font__    | Must point to a previously initialized font handle for more info look at font documentation
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __font__    | 填写已经初始化的字体句柄（font handle），阅读字体文档获得更多信息
 ///
 /// Returns either `false(0)` on failure or `true(1)` on success.
 ///
@@ -347,9 +349,9 @@ enum nk_symbol_type {
 NK_API int nk_init_default(struct nk_context*, const struct nk_user_font*);
 #endif
 /*/// #### nk_init_fixed
-/// Initializes a `nk_context` struct from single fixed size memory block
-/// Should be used if you want complete control over nuklear's memory management.
-/// Especially recommended for system with little memory or systems with virtual memory.
+/// 使用固定大小的内存块初始化一个   `nk_context`
+/// 如果你希望由 nuklear 完全控制内存，则使用这个功能
+/// 特别推荐在内存较小的系统，或使用虚拟内存的系统使用
 /// For the later case you can just allocate for example 16MB of virtual memory
 /// and only the required amount of memory will actually be committed.
 ///
@@ -358,16 +360,16 @@ NK_API int nk_init_default(struct nk_context*, const struct nk_user_font*);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ///
 /// !!! Warning
-///     make sure the passed memory block is aligned correctly for `nk_draw_commands`.
+///     请确保给 `nk_draw_commands`（绘制命令缓冲区） 的内存以正确对齐
 ///
 /// 参数   | 描述
 /// ------------|--------------------------------------------------------------
-/// __ctx__     | Must point to an either stack or heap allocated `nk_context` struct
-/// __memory__  | Must point to a previously allocated memory block
-/// __size__    | Must contain the total size of __memory__
-/// __font__    | Must point to a previously initialized font handle for more info look at font documentation
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __memory__  | 指向以前分配的内存块
+/// __size__    | 内存块的总大小
+/// __font__    | 填写已经初始化的字体句柄（font handle）
 ///
-/// Returns either `false(0)` on failure or `true(1)` on success.
+/// 返回 `true(1)` 成功 或 `false(0)` 失败 
 */
 NK_API int nk_init_fixed(struct nk_context*, void *memory, nk_size size, const struct nk_user_font*);
 /*/// #### nk_init
@@ -422,8 +424,7 @@ NK_API int nk_init_custom(struct nk_context*, struct nk_buffer *cmds, struct nk_
 */
 NK_API void nk_clear(struct nk_context*);
 /*/// #### nk_free
-/// Frees all memory allocated by nuklear. Not needed if context was
-/// initialized with `nk_init_fixed`.
+/// 释放 context 申请的所有内存，如果使用的是 `nk_init_fixed` 则不需要这步
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_free(struct nk_context *ctx);
@@ -437,6 +438,7 @@ NK_API void nk_free(struct nk_context*);
 #ifdef NK_INCLUDE_COMMAND_USERDATA
 /*/// #### nk_set_user_data
 /// Sets the currently passed userdata passed down into each draw command.
+/// 为当前的 userdata 设置每一个绘制命令
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_set_user_data(struct nk_context *ctx, nk_handle data);
@@ -458,6 +460,7 @@ NK_API void nk_set_user_data(struct nk_context*, nk_handle handle);
 /// input API 负责保持当前由鼠标、按键和文本输入所组成的输入状态。
 /// nuklear 并没有直接操作窗口句柄或是系统
 /// 所有输入状态都必须由特定于平台的代码提供的。 
+/// 这虽然一方面增加了用户的工作，使问题复杂化，但也对于不同的也平台提供了简单的抽象
 /// This in one hand expects more work from the user and complicates usage but 
 /// on the other hand provides simple abstraction over a big number of platforms, 
 /// libraries and other already provided functionality.
@@ -528,7 +531,7 @@ enum nk_keys {
     NK_KEY_DOWN,
     NK_KEY_LEFT,
     NK_KEY_RIGHT,
-    /* Shortcuts: text field */
+    /* Shortcuts: 文本字段 text field */
     NK_KEY_TEXT_INSERT_MODE,
     NK_KEY_TEXT_REPLACE_MODE,
     NK_KEY_TEXT_RESET_MODE,
@@ -541,7 +544,7 @@ enum nk_keys {
     NK_KEY_TEXT_SELECT_ALL,
     NK_KEY_TEXT_WORD_LEFT,
     NK_KEY_TEXT_WORD_RIGHT,
-    /* Shortcuts: scrollbar */
+    /* Shortcuts: 滚动条 scrollbar */
     NK_KEY_SCROLL_START,
     NK_KEY_SCROLL_END,
     NK_KEY_SCROLL_DOWN,
@@ -556,8 +559,7 @@ enum nk_buttons {
     NK_BUTTON_MAX
 };
 /*/// #### nk_input_begin
-/// Begins the input mirroring process by resetting text, scroll
-/// mouse previous mouse position and movement as well as key state transitions,
+/// 重置，文本、滚动条、鼠标状态和按键状态
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_input_begin(struct nk_context*);
@@ -565,11 +567,11 @@ enum nk_buttons {
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to a previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 */
 NK_API void nk_input_begin(struct nk_context*);
 /*/// #### nk_input_motion
-/// Mirrors current mouse position to nuklear
+/// 将鼠标位置信息引入到 nuklear 中
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_input_motion(struct nk_context *ctx, int x, int y);
@@ -577,13 +579,13 @@ NK_API void nk_input_begin(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to a previously initialized `nk_context` struct
-/// __x__       | Must hold an integer describing the current mouse cursor x-position
-/// __y__       | Must hold an integer describing the current mouse cursor y-position
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __x__       | 描述当前鼠标光标 x 位置的整数
+/// __y__       | 描述当前鼠标光标 y 位置的整数
 */
 NK_API void nk_input_motion(struct nk_context*, int x, int y);
 /*/// #### nk_input_key
-/// Mirrors state of a specific key to nuklear
+/// 将特定键的信息引入 nuklear
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_input_key(struct nk_context*, enum nk_keys key, int down);
@@ -591,13 +593,13 @@ NK_API void nk_input_motion(struct nk_context*, int x, int y);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to a previously initialized `nk_context` struct
-/// __key__     | Must be any value specified in enum `nk_keys` that needs to be mirrored
-/// __down__    | Must be 0 for key is up and 1 for key is down
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __key__     | 枚举类型 `nk_keys` 中的一个键
+/// __down__    | 0 抬起 ， 1 按下
 */
 NK_API void nk_input_key(struct nk_context*, enum nk_keys, int down);
 /*/// #### nk_input_button
-/// Mirrors the state of a specific mouse button to nuklear
+/// 将鼠标按键信息引入 nuklear
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_input_button(struct nk_context *ctx, enum nk_buttons btn, int x, int y, int down);
@@ -605,16 +607,16 @@ NK_API void nk_input_key(struct nk_context*, enum nk_keys, int down);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to a previously initialized `nk_context` struct
-/// __btn__     | Must be any value specified in enum `nk_buttons` that needs to be mirrored
-/// __x__       | Must contain an integer describing mouse cursor x-position on click up/down
-/// __y__       | Must contain an integer describing mouse cursor y-position on click up/down
-/// __down__    | Must be 0 for key is up and 1 for key is down
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __btn__     | 枚举类型 `nk_buttons` 中的一个键
+/// __x__       | 描述按键时鼠标光标 x 位置的整数
+/// __y__       | 描述按键时鼠标光标 y 位置的整数
+/// __down__    | 0 抬起 ， 1 按下
 */
 NK_API void nk_input_button(struct nk_context*, enum nk_buttons, int x, int y, int down);
 /*/// #### nk_input_scroll
-/// Copies the last mouse scroll value to nuklear. Is generally
-/// a scroll value. So does not have to come from mouse and could also originate
+/// 将鼠标滚轴滚动值引入 nuklear 
+/// 不一定非要来自鼠标，也可以来自其他来源
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_input_scroll(struct nk_context *ctx, struct nk_vec2 val);
@@ -622,17 +624,16 @@ NK_API void nk_input_button(struct nk_context*, enum nk_buttons, int x, int y, i
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to a previously initialized `nk_context` struct
-/// __val__     | vector with both X- as well as Y-scroll value
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __val__     | 具有 X 和 Y 滚动值的矢量
 */
 NK_API void nk_input_scroll(struct nk_context*, struct nk_vec2 val);
 /*/// #### nk_input_char
-/// Copies a single ASCII character into an internal text buffer
-/// This is basically a helper function to quickly push ASCII characters into
-/// nuklear.
+/// 复制一个 ASCII 字符到内部文本缓冲区
+/// 这是一个辅助函数，用来将 ASCII 字符快速推入 nuklear 。
 ///
 /// !!! Note
-///     Stores up to NK_INPUT_MAX bytes between `nk_input_begin` and `nk_input_end`.
+///     在 `nk_input_begin` `nk_input_end` 之间最多储存 NK_INPUT_MAX bit 的内容
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_input_char(struct nk_context *ctx, char c);
@@ -640,16 +641,15 @@ NK_API void nk_input_scroll(struct nk_context*, struct nk_vec2 val);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to a previously initialized `nk_context` struct
-/// __c__       | Must be a single ASCII character preferable one that can be printed
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __c__       | 一个 ASCII 字符
 */
 NK_API void nk_input_char(struct nk_context*, char);
 /*/// #### nk_input_glyph
-/// Converts an encoded unicode rune into UTF-8 and copies the result into an
-/// internal text buffer.
+/// 将一个 encoded unicode 字符编码为 UTF-8 并复制到内部文本缓冲区中
 ///
 /// !!! Note
-///     Stores up to NK_INPUT_MAX bytes between `nk_input_begin` and `nk_input_end`.
+///     在 `nk_input_begin` `nk_input_end` 之间最多储存 NK_INPUT_MAX bit 的内容
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_input_glyph(struct nk_context *ctx, const nk_glyph g);
@@ -657,15 +657,14 @@ NK_API void nk_input_char(struct nk_context*, char);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to a previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __g__       | UTF-32 unicode codepoint
 */
 NK_API void nk_input_glyph(struct nk_context*, const nk_glyph);
 /*/// #### nk_input_unicode
-/// Converts a unicode rune into UTF-8 and copies the result
-/// into an internal text buffer.
+/// 将一个 encoded unicode 字符编码为 UTF-8 并复制到内部文本缓冲区中
 /// !!! Note
-///     Stores up to NK_INPUT_MAX bytes between `nk_input_begin` and `nk_input_end`.
+///     在 `nk_input_begin` `nk_input_end` 之间最多储存 NK_INPUT_MAX bit 的内容
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_input_unicode(struct nk_context*, nk_rune rune);
@@ -673,13 +672,14 @@ NK_API void nk_input_glyph(struct nk_context*, const nk_glyph);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to a previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __rune__    | UTF-32 unicode codepoint
 */
 NK_API void nk_input_unicode(struct nk_context*, nk_rune);
 /*/// #### nk_input_end
 /// End the input mirroring process by resetting mouse grabbing
-/// state to ensure the mouse cursor is not grabbed indefinitely.///
+/// state to ensure the mouse cursor is not grabbed indefinitely.
+/// 通过重置鼠标抓取状态来结束输入镜像过程, 以确保鼠标光标不会无限期地被抓住。
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_input_end(struct nk_context *ctx);
@@ -687,7 +687,7 @@ NK_API void nk_input_unicode(struct nk_context*, nk_rune);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to a previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 */
 NK_API void nk_input_end(struct nk_context*);
 /* =============================================================================
@@ -766,12 +766,11 @@ NK_API void nk_input_end(struct nk_context*);
 /// nk_free(&ctx);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ///
-/// You probably noticed that you have to draw all of the UI each frame which is
-/// quite wasteful. While the actual UI updating loop is quite fast rendering
-/// without actually needing it is not. So there are multiple things you could do.
+/// 你可能注意到，在每一帧，你必须绘制所有的 UI ，这是相当浪费资源的
+/// 然而实际中 UI 需要相当快的渲染速度
+/// 所以这还有很多事情可以做
 ///
-/// First is only update on input. This of course is only an option if your
-/// application only depends on the UI and does not require any outside calculations.
+/// 首先是只有在输入时才更新（惰性更新），如果你的应用只依赖与UI，没有额外的计算，可以这样做
 /// If you actually only update on input make sure to update the UI two times each
 /// frame and call `nk_clear` directly after the first pass and only draw in
 /// the second pass. In addition it is recommended to also add additional timers
@@ -805,7 +804,7 @@ NK_API void nk_input_end(struct nk_context*);
 /// nk_free(&ctx);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ///
-/// The second probably more applicable trick is to only draw if anything changed.
+/// 第二种方式是只有在有改变时才更新
 /// It is not really useful for applications with continuous draw loop but
 /// quite useful for desktop applications. To actually get nuklear to only
 /// draw on changes you first have to define `NK_ZERO_COMMAND_MEMORY` and
@@ -853,17 +852,15 @@ NK_API void nk_input_end(struct nk_context*);
 /// nk_free(&ctx);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ///
-/// Finally while using draw commands makes sense for higher abstracted platforms like
-/// X11 and Win32 or drawing libraries it is often desirable to use graphics
-/// hardware directly. Therefore it is possible to just define
-/// `NK_INCLUDE_VERTEX_BUFFER_OUTPUT` which includes optional vertex output.
-/// To access the vertex output you first have to convert all draw commands into
-/// vertexes by calling `nk_convert` which takes in your preferred vertex format.
-/// After successfully converting all draw commands just iterate over and execute all
-/// vertex draw commands:
+/// 最后，当使用的后端有更高的抽象时，最好直接使用图形硬件。比如
+/// X11 、 Win32 或 drawing libraries
+/// 这样可以只定义 `NK_INCLUDE_VERTEX_BUFFER_OUTPUT` 顶点输出方式
+/// 要使用顶点输出方式，你需要先将所有绘制命令转换为顶点
+/// 方法是调用 `nk_convert` 这将把所有绘制命令转换为顶点绘制
+/// 在成功转换后，只需要遍历并执行所有的顶点绘制指令即可
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
-/// // fill configuration
+/// // fill configuration 填充配置
 /// struct nk_convert_config cfg = {};
 /// static const struct nk_draw_vertex_layout_element vertex_layout[] = {
 ///     {NK_VERTEX_POSITION, NK_FORMAT_FLOAT, NK_OFFSETOF(struct your_vertex, pos)},
@@ -905,7 +902,7 @@ NK_API void nk_input_end(struct nk_context*);
 /// __nk__begin__       | 返回要绘制的绘制命令列表中的第一个绘制命令
 /// __nk__next__        | 将绘制命令迭代器递增到绘制命令列表中的下一个命令
 /// __nk_foreach__      | 遍历绘制命令列表中的每个绘图命令
-/// __nk_convert__      | Converts from the abstract draw commands list into a hardware accessible vertex format
+/// __nk_convert__      | 将抽象的绘图命令转换为硬件可访问的顶点绘制命令
 /// __nk_draw_begin__   | 返回要执行的顶点绘制列表中的第一个顶点命令？？
 /// __nk__draw_next__   | 将顶点命令迭代器递增到顶点命令列表中的下一个命令
 /// __nk__draw_end__    | 返回顶点绘制列表的末尾
@@ -4091,7 +4088,7 @@ enum nk_command_type {
     NK_COMMAND_POLYGON_FILLED,
     NK_COMMAND_POLYLINE,
     NK_COMMAND_TEXT,
-    NK_COMMAND_IMAGE,
+    NK_COMMAND_IMAGE, /* 绘制图像 */
     NK_COMMAND_CUSTOM
 };
 
@@ -4553,30 +4550,30 @@ struct nk_style_button {
 };
 
 struct nk_style_toggle {
-    /* background */
-    struct nk_style_item normal;
-    struct nk_style_item hover;
-    struct nk_style_item active;
-    struct nk_color border_color;
+    /* 背景 background */
+    struct nk_style_item normal; /* 正常 */
+    struct nk_style_item hover; /* 经过 */
+    struct nk_style_item active; /* 点击 */
+    struct nk_color border_color; /* 描边颜色 */
 
-    /* cursor */
+    /* 光标 cursor */
     struct nk_style_item cursor_normal;
     struct nk_style_item cursor_hover;
 
-    /* text */
+    /* 文字 text */
     struct nk_color text_normal;
     struct nk_color text_hover;
     struct nk_color text_active;
     struct nk_color text_background;
     nk_flags text_alignment;
 
-    /* properties */
+    /* 属性 properties */
     struct nk_vec2 padding;
     struct nk_vec2 touch_padding;
     float spacing;
     float border;
 
-    /* optional user callbacks */
+    /* 用户自定义回调 optional user callbacks */
     nk_handle userdata;
     void(*draw_begin)(struct nk_command_buffer*, nk_handle);
     void(*draw_end)(struct nk_command_buffer*, nk_handle);
@@ -5242,7 +5239,7 @@ struct nk_table {
 /* 页面元素数据 */
 union nk_page_data {
     struct nk_table tbl;
-    struct nk_panel pan;
+    struct nk_panel pan; /* 面板结构体 */
     struct nk_window win;
 };
 /* 页面元素 */

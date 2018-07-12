@@ -165,13 +165,13 @@ nk_do_toggle(nk_flags *state,
     if (style->draw_begin)
         style->draw_begin(out, style->userdata);
     if (type == NK_TOGGLE_CHECK) {
-        /* TODO: 翻译进度4 选择器小部件*/
         /* 绘制多选按钮 */
         nk_draw_checkbox(out, *state, style, *active, &label, &select, &cursor, str, len, font);
     } else {
         /* 绘制单选选项 */
         nk_draw_option(out, *state, style, *active, &label, &select, &cursor, str, len, font);
     }
+    /* 用户自定义回调 */
     if (style->draw_end)
         style->draw_end(out, style->userdata);
     return (was_active != *active);

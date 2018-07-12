@@ -11,19 +11,20 @@ NK_LIB struct nk_page_element*
 nk_create_page_element(struct nk_context *ctx)
 {
     struct nk_page_element *elem;
-    /* TODO: 创建一个页面元素的两种特殊情况 */
+    /* TODO: 创建一个页面元素的三种情况 */
     if (ctx->freelist) {
         /* unlink page element from free list */
+        /* 在当前freelist中建立新页面元素 */
         elem = ctx->freelist;
         ctx->freelist = elem->next;
     } else if (ctx->use_pool) {
         /* allocate page element from memory pool */
+        /* 创建一个新的池，存放新的页面元素 */
         elem = nk_pool_alloc(&ctx->pool);
         NK_ASSERT(elem);
         if (!elem) return 0;
     } else {
         /* 从固定大小内存缓冲区的后面分配新的页面元素 allocate new page element from back of fixed size memory buffer */
-        /* TODO: 后面看不懂 */
         NK_STORAGE const nk_size size = sizeof(struct nk_page_element);
         NK_STORAGE const nk_size align = NK_ALIGNOF(struct nk_page_element);
         elem = (struct nk_page_element*)nk_buffer_alloc(&ctx->memory, NK_BUFFER_BACK, size, align);

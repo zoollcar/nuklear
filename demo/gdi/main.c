@@ -121,6 +121,7 @@ int main(void)
         /* Input 输入 */
         MSG msg; /* windows消息结构体 */
         nk_input_begin(ctx);
+        /* TODO: 翻译进度5 输入部分 */
         if (needs_refresh == 0) {
             if (GetMessageW(&msg, NULL, 0, 0) <= 0)
                 running = 0;

@@ -400,7 +400,6 @@ nk_stroke_polyline(struct nk_command_buffer *b, float *points, int point_count,
     }
 }
 /* 绘制图片 */
-/* TODO: 绘制图片 */
 NK_API void
 nk_draw_image(struct nk_command_buffer *b, struct nk_rect r,
     const struct nk_image *img, struct nk_color col)
@@ -413,7 +412,7 @@ nk_draw_image(struct nk_command_buffer *b, struct nk_rect r,
         if (c->w == 0 || c->h == 0 || !NK_INTERSECT(r.x, r.y, r.w, r.h, c->x, c->y, c->w, c->h))
             return;
     }
-
+    /* 向命令缓冲区添加命令 */
     cmd = (struct nk_command_image*)
         nk_command_buffer_push(b, NK_COMMAND_IMAGE, sizeof(*cmd));
     if (!cmd) return;

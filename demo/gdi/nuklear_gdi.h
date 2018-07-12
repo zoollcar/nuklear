@@ -825,6 +825,7 @@ nk_gdi_render(struct nk_color clear)
                 q->end, q->line_thickness, q->color);
         } break;
         case NK_COMMAND_RECT_MULTI_COLOR:
+        /* 绘制图片 */
         case NK_COMMAND_IMAGE: {
 			const struct nk_command_image *i = (const struct nk_command_image *)cmd;
 			nk_gdi_draw_image(i->x, i->y, i->w, i->h, i->img, i->col);

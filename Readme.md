@@ -12,7 +12,7 @@
 
 这是一个小型的开箱即用的图形用户界面工具包
 使用 ANSI C 编写。
-这是一个小型的嵌入式用户界面，没用依赖
+这是一个小型的嵌入式用户界面，可以配置为没有任何依赖
 a default renderbackend or OS window and input handling but instead provides a very modular
 library approach by using simple input state for input and draw
 commands describing primitive shapes as output. So instead of providing 
@@ -47,6 +47,8 @@ e.g.:
     #include "nuklear.h"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 注意: 每次包含nuklear时都应定义相同的编译器标志。这非常重要，否则可能会导致编译错误，甚至堆栈损坏。
+
+注意：中文版编译有问题？是中文注释的问题，将 nuklear.h 文件编码转换为 GB 2312 即可
 
 ## 画廊
 

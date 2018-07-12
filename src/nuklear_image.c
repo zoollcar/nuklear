@@ -107,6 +107,7 @@ nk_image_is_subimage(const struct nk_image* img)
     NK_ASSERT(img);
     return !(img->w == 0 && img->h == 0);
 }
+
 NK_API void
 nk_image(struct nk_context *ctx, struct nk_image img)
 {

@@ -6,6 +6,7 @@
  *                          INPUT
  *
  * ===============================================================*/
+/* 初始化ctx的输入信息 */
 NK_API void
 nk_input_begin(struct nk_context *ctx)
 {
@@ -16,9 +17,10 @@ nk_input_begin(struct nk_context *ctx)
     in = &ctx->input;
     for (i = 0; i < NK_BUTTON_MAX; ++i)
         in->mouse.buttons[i].clicked = 0;
-    /* TODO: 翻译进度5 输入部分 */
+    /* 初始化 */
     in->keyboard.text_len = 0;
     in->mouse.scroll_delta = nk_vec2(0,0);
+    /* prev 记录上一个坐标，pos是当前坐标 */
     in->mouse.prev.x = in->mouse.pos.x;
     in->mouse.prev.y = in->mouse.pos.y;
     in->mouse.delta.x = 0;
