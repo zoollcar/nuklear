@@ -942,7 +942,7 @@ struct nk_convert_config {
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | must point to an previously initialized `nk_context` struct at the end of a frame
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns draw command pointer pointing to the first command inside the draw command list
 */
@@ -956,7 +956,7 @@ NK_API const struct nk_command* nk__begin(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct at the end of a frame
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __cmd__     | Must point to an previously a draw command either returned by `nk__begin` or `nk__next`
 ///
 /// Returns draw command pointer pointing to the next command inside the draw command list
@@ -971,7 +971,7 @@ NK_API const struct nk_command* nk__next(struct nk_context*, const struct nk_com
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct at the end of a frame
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __cmd__     | Command pointer initialized to NULL
 ///
 /// Returns draw command pointer pointing to the next command inside the draw command list
@@ -993,7 +993,7 @@ NK_API const struct nk_command* nk__next(struct nk_context*, const struct nk_com
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct at the end of a frame
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __cmds__    | Must point to a previously initialized buffer to hold converted vertex draw commands
 /// __vertices__| Must point to a previously initialized buffer to hold all produced vertices
 /// __elements__| Must point to a previously initialized buffer to hold all produced vertex indices
@@ -1019,7 +1019,7 @@ NK_API nk_flags nk_convert(struct nk_context*, struct nk_buffer *cmds, struct nk
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct at the end of a frame
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __buf__     | Must point to an previously by `nk_convert` filled out vertex draw command buffer
 ///
 /// Returns vertex draw command pointer pointing to the first command inside the vertex draw command buffer
@@ -1034,7 +1034,7 @@ NK_API const struct nk_draw_command* nk__draw_begin(const struct nk_context*, co
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct at the end of a frame
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __buf__     | Must point to an previously by `nk_convert` filled out vertex draw command buffer
 ///
 /// Returns vertex draw command pointer pointing to the end of the last vertex draw command inside the vertex draw command buffer
@@ -1051,7 +1051,7 @@ NK_API const struct nk_draw_command* nk__draw_end(const struct nk_context*, cons
 /// ------------|-----------------------------------------------------------
 /// __cmd__     | Must point to an previously either by `nk__draw_begin` or `nk__draw_next` returned vertex draw command
 /// __buf__     | Must point to an previously by `nk_convert` filled out vertex draw command buffer
-/// __ctx__     | Must point to an previously initialized `nk_context` struct at the end of a frame
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns vertex draw command pointer pointing to the end of the last vertex draw command inside the vertex draw command buffer
 */
@@ -1067,7 +1067,7 @@ NK_API const struct nk_draw_command* nk__draw_next(const struct nk_draw_command*
 /// ------------|-----------------------------------------------------------
 /// __cmd__     | `nk_draw_command`iterator set to NULL
 /// __buf__     | Must point to an previously by `nk_convert` filled out vertex draw command buffer
-/// __ctx__     | Must point to an previously initialized `nk_context` struct at the end of a frame
+/// __ctx__     | 指向 `nk_context` 结构体
 */
 #define nk_draw_foreach(cmd,ctx, b) for((cmd)=nk__draw_begin(ctx, b); (cmd)!=0; (cmd)=nk__draw_next(cmd, b, ctx))
 #endif
@@ -1224,8 +1224,7 @@ enum nk_panel_flags {
     NK_WINDOW_NO_INPUT          = NK_FLAG(10)
 };
 /*/// #### nk_begin
-/// Starts a new window; needs to be called every frame for every
-/// window (unless hidden) or otherwise the window gets removed
+/// 开始一个新窗口，每个窗口都需要在每一帧开始一次，除非不想显示或者窗口被移除
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// int nk_begin(struct nk_context *ctx, const char *title, struct nk_rect bounds, nk_flags flags);
@@ -1233,18 +1232,18 @@ enum nk_panel_flags {
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
-/// __title__   | Window title and identifier. Needs to be persistent over frames to identify the window
-/// __bounds__  | Initial position and window size. However if you do not define `NK_WINDOW_SCALABLE` or `NK_WINDOW_MOVABLE` you can set window position and size every frame
-/// __flags__   | Window flags defined in the nk_panel_flags section with a number of different window behaviors
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __title__   | 窗口的标题和 ID 用来在整个帧的生成中标识一个窗口
+/// __bounds__  | 初始化窗口的位置和大小，如果你没有定义 `NK_WINDOW_SCALABLE` 或 `NK_WINDOW_MOVABLE` 你可以在每一帧设置窗口的位置和大小
+/// __flags__   | 窗口的 flegs 在 nk_panel_flags 中定义用来描述窗口的的行为
 ///
-/// Returns `true(1)` if the window can be filled up with widgets from this point
+/// 返回 `true(1)` if the window can be filled up with widgets from this point
 /// until `nk_end` or `false(0)` otherwise for example if minimized
 */
 NK_API int nk_begin(struct nk_context *ctx, const char *title, struct nk_rect bounds, nk_flags flags);
 /*/// #### nk_begin_titled
-/// Extended window start with separated title and identifier to allow multiple
-/// windows with same name but not title
+/// 分别描述窗口的 ID 和 标题
+/// 这将允许有相同标题的窗口存在
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// int nk_begin_titled(struct nk_context *ctx, const char *name, const char *title, struct nk_rect bounds, nk_flags flags);
@@ -1252,19 +1251,18 @@ NK_API int nk_begin(struct nk_context *ctx, const char *title, struct nk_rect bo
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
-/// __name__    | Window identifier. Needs to be persistent over frames to identify the window
-/// __title__   | Window title displayed inside header if flag `NK_WINDOW_TITLE` or either `NK_WINDOW_CLOSABLE` or `NK_WINDOW_MINIMIZED` was set
-/// __bounds__  | Initial position and window size. However if you do not define `NK_WINDOW_SCALABLE` or `NK_WINDOW_MOVABLE` you can set window position and size every frame
-/// __flags__   | Window flags defined in the nk_panel_flags section with a number of different window behaviors
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __name__    | 窗口的 ID ，用来在整个帧的生成中标识一个窗口
+/// __title__   | 如果 `NK_WINDOW_TITLE` 、 either `NK_WINDOW_CLOSABLE` 或 `NK_WINDOW_MINIMIZED` 被指定时，窗口显示的标题
+/// __bounds__  | 初始化窗口的位置和大小，如果你没有定义 `NK_WINDOW_SCALABLE` 或 `NK_WINDOW_MOVABLE` 你可以在每一帧设置窗口的位置和大小
+/// __flags__   | 窗口的 flegs 在 nk_panel_flags 中定义用来描述窗口的的行为
 ///
 /// Returns `true(1)` if the window can be filled up with widgets from this point
 /// until `nk_end` or `false(0)` otherwise for example if minimized
 */
 NK_API int nk_begin_titled(struct nk_context *ctx, const char *name, const char *title, struct nk_rect bounds, nk_flags flags);
 /*/// #### nk_end
-/// Needs to be called at the end of the window building process to process scaling, scrollbars and general cleanup.
-/// All widget calls after this functions will result in asserts or no state changes
+/// 需要在窗口构建结束时调用以进行缩放，滚动条和一般清理工作
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_end(struct nk_context *ctx);
@@ -1272,11 +1270,11 @@ NK_API int nk_begin_titled(struct nk_context *ctx, const char *name, const char 
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 */
 NK_API void nk_end(struct nk_context *ctx);
 /*/// #### nk_window_find
-/// Finds and returns a window from passed name
+/// 通过名字查找并返回窗口
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
 /// void nk_end(struct nk_context *ctx);
@@ -1284,7 +1282,7 @@ NK_API void nk_end(struct nk_context *ctx);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Window identifier
 ///
 /// Returns a `nk_window` struct pointing to the identified window or NULL if
@@ -1293,7 +1291,7 @@ NK_API void nk_end(struct nk_context *ctx);
 NK_API struct nk_window *nk_window_find(struct nk_context *ctx, const char *name);
 /*/// #### nk_window_get_bounds
 ///
-/// Returns a rectangle with screen position and size of the currently processed window
+/// 返回当前处理的窗口的位置和大小矩阵。
 /// !!! WARNING
 ///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
@@ -1302,14 +1300,14 @@ NK_API struct nk_window *nk_window_find(struct nk_context *ctx, const char *name
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns a `nk_rect` struct with window upper left window position and size
 */
 NK_API struct nk_rect nk_window_get_bounds(const struct nk_context *ctx);
 /*/// #### nk_window_get_bounds
 ///
-/// Returns the position of the currently processed window.
+/// 返回当前处理的窗口的位置
 /// !!! WARNING
 ///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
@@ -1318,14 +1316,14 @@ NK_API struct nk_rect nk_window_get_bounds(const struct nk_context *ctx);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns a `nk_vec2` struct with window upper left position
 */
 NK_API struct nk_vec2 nk_window_get_position(const struct nk_context *ctx);
 /*/// #### nk_window_get_size
 ///
-/// Returns the size with width and height of the currently processed window.
+/// 返回当前处理的窗口的宽度和高度的大小
 /// !!! WARNING
 ///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
@@ -1334,14 +1332,14 @@ NK_API struct nk_vec2 nk_window_get_position(const struct nk_context *ctx);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns a `nk_vec2` struct with window width and height
 */
 NK_API struct nk_vec2 nk_window_get_size(const struct nk_context*);
 /*/// #### nk_window_get_width
 ///
-/// Returns the width of the currently processed window.
+/// 返回当前处理的窗口的宽度
 /// !!! WARNING
 ///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
@@ -1350,14 +1348,14 @@ NK_API struct nk_vec2 nk_window_get_size(const struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns the current window width
 */
 NK_API float nk_window_get_width(const struct nk_context*);
 /*/// #### nk_window_get_height
 ///
-/// Returns the height of the currently processed window.
+/// 返回当前处理的窗口的高度
 /// !!! WARNING
 ///     Only call this function between calls `nk_begin_xxx` and `nk_end`
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
@@ -1366,7 +1364,7 @@ NK_API float nk_window_get_width(const struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns the current window height
 */
@@ -1384,7 +1382,7 @@ NK_API float nk_window_get_height(const struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns a pointer to window internal `nk_panel` state.
 */
@@ -1402,7 +1400,7 @@ NK_API struct nk_panel* nk_window_get_panel(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns `nk_rect` struct with screen position and size (no scrollbar offset)
 /// of the visible space inside the current window
@@ -1421,7 +1419,7 @@ NK_API struct nk_rect nk_window_get_content_region(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// returns `nk_vec2` struct with  upper left screen position (no scrollbar offset)
 /// of the visible space inside the current window
@@ -1440,7 +1438,7 @@ NK_API struct nk_vec2 nk_window_get_content_region_min(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns `nk_vec2` struct with lower right screen position (no scrollbar offset)
 /// of the visible space inside the current window
@@ -1459,7 +1457,7 @@ NK_API struct nk_vec2 nk_window_get_content_region_max(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns `nk_vec2` struct with size the visible space inside the current window
 */
@@ -1477,7 +1475,7 @@ NK_API struct nk_vec2 nk_window_get_content_region_size(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns a pointer to window internal `nk_command_buffer` struct used as
 /// drawing canvas. Can be used to do custom drawing.
@@ -1493,7 +1491,7 @@ NK_API struct nk_command_buffer* nk_window_get_canvas(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns `false(0)` if current window is not active or `true(1)` if it is
 */
@@ -1508,7 +1506,7 @@ NK_API int nk_window_has_focus(const struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns `true(1)` if current window is hovered or `false(0)` otherwise
 */
@@ -1521,7 +1519,7 @@ NK_API int nk_window_is_hovered(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of window you want to check if it is collapsed
 ///
 /// Returns `true(1)` if current window is minimized and `false(0)` if window not
@@ -1536,7 +1534,7 @@ NK_API int nk_window_is_collapsed(struct nk_context *ctx, const char *name);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of window you want to check if it is closed
 ///
 /// Returns `true(1)` if current window was closed or `false(0)` window not found or not closed
@@ -1550,7 +1548,7 @@ NK_API int nk_window_is_closed(struct nk_context*, const char*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of window you want to check if it is hidden
 ///
 /// Returns `true(1)` if current window is hidden or `false(0)` window not found or visible
@@ -1564,7 +1562,7 @@ NK_API int nk_window_is_hidden(struct nk_context*, const char*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of window you want to check if it is active
 ///
 /// Returns `true(1)` if current window is active or `false(0)` window not found or not active
@@ -1578,7 +1576,7 @@ NK_API int nk_window_is_active(struct nk_context*, const char*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns `true(1)` if any window is hovered or `false(0)` otherwise
 */
@@ -1593,7 +1591,7 @@ NK_API int nk_window_is_any_hovered(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 ///
 /// Returns `true(1)` if any window is hovered or any item is active or `false(0)` otherwise
 */
@@ -1606,7 +1604,7 @@ NK_API int nk_item_is_any_active(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of the window to modify both position and size
 /// __bounds__  | Must point to a `nk_rect` struct with the new position and size
 */
@@ -1619,7 +1617,7 @@ NK_API void nk_window_set_bounds(struct nk_context*, const char *name, struct nk
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of the window to modify both position
 /// __pos__     | Must point to a `nk_vec2` struct with the new position
 */
@@ -1632,7 +1630,7 @@ NK_API void nk_window_set_position(struct nk_context*, const char *name, struct 
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of the window to modify both window size
 /// __size__    | Must point to a `nk_vec2` struct with new window size
 */
@@ -1645,7 +1643,7 @@ NK_API void nk_window_set_size(struct nk_context*, const char *name, struct nk_v
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of the window to set focus on
 */
 NK_API void nk_window_set_focus(struct nk_context*, const char *name);
@@ -1657,7 +1655,7 @@ NK_API void nk_window_set_focus(struct nk_context*, const char *name);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of the window to close
 */
 NK_API void nk_window_close(struct nk_context *ctx, const char *name);
@@ -1669,7 +1667,7 @@ NK_API void nk_window_close(struct nk_context *ctx, const char *name);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of the window to close
 /// __state__   | value out of nk_collapse_states section
 */
@@ -1682,7 +1680,7 @@ NK_API void nk_window_collapse(struct nk_context*, const char *name, enum nk_col
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of the window to either collapse or maximize
 /// __state__   | value out of nk_collapse_states section the window should be put into
 /// __cond__    | condition that has to be met to actually commit the collapse state change
@@ -1696,7 +1694,7 @@ NK_API void nk_window_collapse_if(struct nk_context*, const char *name, enum nk_
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of the window to either collapse or maximize
 /// __state__   | state with either visible or hidden to modify the window with
 */
@@ -1709,7 +1707,7 @@ NK_API void nk_window_show(struct nk_context*, const char *name, enum nk_show_st
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __name__    | Identifier of the window to either hide or show
 /// __state__   | state with either visible or hidden to modify the window with
 /// __cond__    | condition that has to be met to actually commit the visbility state change
@@ -1724,41 +1722,40 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
 /// Layouting 描述了小部件放置在窗口中的位置和大小。
 /// 在这里，有五个不同的API用于布局，每个API在控制和易用性之间都有不同的权衡。
 ///
-/// All layouting methods in this library are based around the concept of a row.
-/// A row has a height the window content grows by and a number of columns and each
-/// layouting method specifies how each widget is placed inside the row.
+/// 所有的布局模式都基于“行”的概念
+/// 行的高度与内容的高度和行数有关
+/// 每种布局描述了小部件在行中的分布
 /// After a row has been allocated by calling a layouting functions and then
 /// filled with widgets will advance an internal pointer over the allocated row. 
 ///
-/// To actually define a layout you just call the appropriate layouting function
-/// and each subsequent widget call will place the widget as specified. Important
-/// here is that if you define more widgets then columns defined inside the layout
-/// functions it will allocate the next row without you having to make another layouting 
-/// call.
+/// 要定义一个布局，你只需要调用相应的布局函数
+/// 这样后续的小部件就会放到指定的地方
+/// 重要的是，当你定义的小部件数比当前列能放置的多
+/// 这个小部件会放到下一行，不用重新定义一个布局
 ///
-/// Biggest limitation with using all these APIs outside the `nk_layout_space_xxx` API
-/// is that you have to define the row height for each. However the row height
-/// often depends on the height of the font. 
+/// 尽管，行高通常取决于字体大小
+/// 除了 `nk_layout_space_xxx` 之外的API都需要定义行高
 ///
+/// 可以通过将字体高度加上最小填充高度替换 0 的位置来覆盖 nuklear 内部设置
 /// To fix that internally nuklear uses a minimum row height that is set to the
 /// height plus padding of currently active font and overwrites the row height
 /// value if zero. 
 ///
-/// If you manually want to change the minimum row height then
-/// use nk_layout_set_min_row_height, and use nk_layout_reset_min_row_height to
+/// 如果你想设置最小行高，则使用 nk_layout_set_min_row_height
+/// 然后使用 nk_layout_reset_min_row_height to
 /// reset it back to be derived from font height. 
 ///
 /// Also if you change the font in nuklear it will automatically change the minimum
 /// row height for you and. This means if you change the font but still want
 /// a minimum row height smaller than the font you have to repush your value. 
-///
-/// For actually more advanced UI I would even recommend using the `nk_layout_space_xxx`
-/// layouting method in combination with a cassowary constraint solver (there are
+/// TODO: 继续翻译文档
+/// 对于更高级的UI，我推荐使用 `nk_layout_space_xxx` 布局方式
+/// in combination with a cassowary constraint solver (there are
 /// some versions on github with permissive license model) to take over all control over widget
 /// layouting yourself. However for quick and dirty layouting using all the other layouting
 /// functions should be fine.
 ///
-/// #### Usage 用法
+/// #### 用法
 /// 1.  __nk_layout_row_dynamic__
 ///     最简单的布局函数是 `nk_layout_row_dynamic`。
 ///     它为每个小部件在行内提供相同的水平空间，并在窗口宽度变化时动态变化。
@@ -1998,7 +1995,7 @@ NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __height__  | New minimum row height to be used for auto generating the row height
 */
 NK_API void nk_layout_set_min_row_height(struct nk_context*, float height);
@@ -2010,7 +2007,7 @@ NK_API void nk_layout_set_min_row_height(struct nk_context*, float height);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 */
 NK_API void nk_layout_reset_min_row_height(struct nk_context*);
 /*/// #### nk_layout_widget_bounds
@@ -2021,7 +2018,7 @@ NK_API void nk_layout_reset_min_row_height(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 ///
 /// Return `nk_rect` with both position and size of the next row
 */
@@ -2034,7 +2031,7 @@ NK_API struct nk_rect nk_layout_widget_bounds(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __pixel__   | Pixel_width to convert to window ratio
 ///
 /// Returns `nk_rect` with both position and size of the next row
@@ -2050,7 +2047,7 @@ NK_API float nk_layout_ratio_from_pixel(struct nk_context*, float pixel_width);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __height__  | Holds height of each widget in row or zero for auto layouting
 /// __columns__ | Number of widget inside row
 */
@@ -2065,7 +2062,7 @@ NK_API void nk_layout_row_dynamic(struct nk_context *ctx, float height, int cols
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __height__  | Holds height of each widget in row or zero for auto layouting
 /// __width__   | Holds pixel width of each widget in the row
 /// __columns__ | Number of widget inside row
@@ -2079,7 +2076,7 @@ NK_API void nk_layout_row_static(struct nk_context *ctx, float height, int item_
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __fmt__     | either `NK_DYNAMIC` for window ratio or `NK_STATIC` for fixed size columns
 /// __height__  | holds height of each widget in row or zero for auto layouting
 /// __columns__ | Number of widget inside row
@@ -2093,7 +2090,7 @@ NK_API void nk_layout_row_begin(struct nk_context *ctx, enum nk_layout_format fm
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __value__   | either a window ratio or fixed width depending on @fmt in previous `nk_layout_row_begin` call
 */
 NK_API void nk_layout_row_push(struct nk_context*, float value);
@@ -2105,7 +2102,7 @@ NK_API void nk_layout_row_push(struct nk_context*, float value);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 */
 NK_API void nk_layout_row_end(struct nk_context*);
 /*/// #### nk_layout_row
@@ -2116,7 +2113,7 @@ NK_API void nk_layout_row_end(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __fmt__     | Either `NK_DYNAMIC` for window ratio or `NK_STATIC` for fixed size columns
 /// __height__  | Holds height of each widget in row or zero for auto layouting
 /// __columns__ | Number of widget inside row
@@ -2130,7 +2127,7 @@ NK_API void nk_layout_row(struct nk_context*, enum nk_layout_format, float heigh
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __height__  | Holds height of each widget in row or zero for auto layouting
 */
 NK_API void nk_layout_row_template_begin(struct nk_context*, float row_height);
@@ -2142,7 +2139,7 @@ NK_API void nk_layout_row_template_begin(struct nk_context*, float row_height);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __height__  | Holds height of each widget in row or zero for auto layouting
 */
 NK_API void nk_layout_row_template_push_dynamic(struct nk_context*);
@@ -2154,7 +2151,7 @@ NK_API void nk_layout_row_template_push_dynamic(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __width__   | Holds the minimum pixel width the next column must always be
 */
 NK_API void nk_layout_row_template_push_variable(struct nk_context*, float min_width);
@@ -2166,7 +2163,7 @@ NK_API void nk_layout_row_template_push_variable(struct nk_context*, float min_w
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __width__   | Holds the absolute pixel width value the next column must be
 */
 NK_API void nk_layout_row_template_push_static(struct nk_context*, float width);
@@ -2178,7 +2175,7 @@ NK_API void nk_layout_row_template_push_static(struct nk_context*, float width);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 */
 NK_API void nk_layout_row_template_end(struct nk_context*);
 /*/// #### nk_layout_space_begin
@@ -2189,7 +2186,7 @@ NK_API void nk_layout_row_template_end(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_begin_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_begin_xxx`
 /// __fmt__     | Either `NK_DYNAMIC` for window ratio or `NK_STATIC` for fixed size columns
 /// __height__  | Holds height of each widget in row or zero for auto layouting
 /// __columns__ | Number of widgets inside row
@@ -2203,7 +2200,7 @@ NK_API void nk_layout_space_begin(struct nk_context*, enum nk_layout_format, flo
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_layout_space_begin`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_layout_space_begin`
 /// __bounds__  | Position and size in laoyut space local coordinates
 */
 NK_API void nk_layout_space_push(struct nk_context*, struct nk_rect bounds);
@@ -2215,7 +2212,7 @@ NK_API void nk_layout_space_push(struct nk_context*, struct nk_rect bounds);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_layout_space_begin`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_layout_space_begin`
 */
 NK_API void nk_layout_space_end(struct nk_context*);
 /*/// #### nk_layout_space_bounds
@@ -2226,7 +2223,7 @@ NK_API void nk_layout_space_end(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_layout_space_begin`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_layout_space_begin`
 ///
 /// Returns `nk_rect` holding the total space allocated
 */
@@ -2239,7 +2236,7 @@ NK_API struct nk_rect nk_layout_space_bounds(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_layout_space_begin`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_layout_space_begin`
 /// __vec__     | Position to convert from layout space into screen coordinate space
 ///
 /// Returns transformed `nk_vec2` in screen space coordinates
@@ -2253,7 +2250,7 @@ NK_API struct nk_vec2 nk_layout_space_to_screen(struct nk_context*, struct nk_ve
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_layout_space_begin`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_layout_space_begin`
 /// __vec__     | Position to convert from screen space into layout coordinate space
 ///
 /// Returns transformed `nk_vec2` in layout space coordinates
@@ -2267,7 +2264,7 @@ NK_API struct nk_vec2 nk_layout_space_to_local(struct nk_context*, struct nk_vec
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_layout_space_begin`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_layout_space_begin`
 /// __bounds__  | Rectangle to convert from layout space into screen space
 ///
 /// Returns transformed `nk_rect` in screen space coordinates
@@ -2281,7 +2278,7 @@ NK_API struct nk_rect nk_layout_space_rect_to_screen(struct nk_context*, struct 
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after call `nk_layout_space_begin`
+/// __ctx__     | 指向 `nk_context` 结构体 after call `nk_layout_space_begin`
 /// __bounds__  | Rectangle to convert from layout space into screen space
 ///
 /// Returns transformed `nk_rect` in layout space coordinates
@@ -2381,7 +2378,7 @@ NK_API struct nk_rect nk_layout_space_rect_to_local(struct nk_context*, struct n
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __title__   | Must be an unique identifier for this group that is also used for the group header
 /// __flags__   | Window flags defined in the nk_panel_flags section with a number of different group behaviors
 ///
@@ -2396,7 +2393,7 @@ NK_API int nk_group_begin(struct nk_context*, const char *title, nk_flags);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __id__      | Must be an unique identifier for this group
 /// __title__   | Group header title
 /// __flags__   | Window flags defined in the nk_panel_flags section with a number of different group behaviors
@@ -2412,7 +2409,7 @@ NK_API int nk_group_begin_titled(struct nk_context*, const char *name, const cha
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 */
 NK_API void nk_group_end(struct nk_context*);
 /*/// #### nk_group_scrolled_offset_begin
@@ -2424,7 +2421,7 @@ NK_API void nk_group_end(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __x_offset__| Scrollbar x-offset to offset all widgets inside the group horizontally.
 /// __y_offset__| Scrollbar y-offset to offset all widgets inside the group vertically
 /// __title__   | Window unique group title used to both identify and display in the group header
@@ -2442,7 +2439,7 @@ NK_API int nk_group_scrolled_offset_begin(struct nk_context*, nk_uint *x_offset,
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 /// __off__     | Both x- and y- scroll offset. Allows for manual scrollbar control
 /// __title__   | Window unique group title used to both identify and display in the group header
 /// __flags__   | Window flags from nk_panel_flags section
@@ -2458,7 +2455,7 @@ NK_API int nk_group_scrolled_begin(struct nk_context*, struct nk_scroll *off, co
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
+/// __ctx__     | 指向 `nk_context` 结构体
 */
 NK_API void nk_group_scrolled_end(struct nk_context*);
 /* =============================================================================
@@ -2467,15 +2464,13 @@ NK_API void nk_group_scrolled_end(struct nk_context*);
  *
  * ============================================================================= 
 /// ### Tree 树
-/// Trees represent two different concept. First the concept of a collapsable
-/// UI section that can be either in a hidden or visibile state. They allow the UI
-/// user to selectively minimize the current set of visible UI to comprehend.
-/// The second concept are tree widgets for visual UI representation of trees.
+/// 树 有两种含义，一种是可以折叠的小部件组，可以让用户选择性的显示或不显示一部分小部件
+/// 另一种是 树小部件，用于树的可视化（如，文件的 树状结构）
 ///
 /// Trees thereby can be nested for tree representations and multiple nested
-/// collapsable UI sections. All trees are started by calling of the
-/// `nk_tree_xxx_push_tree` functions and ended by calling one of the
-/// `nk_tree_xxx_pop_xxx()` functions. Each starting functions takes a title label
+/// collapsable UI sections. 
+/// 所有的树都通过调用 `nk_tree_xxx_push_tree` 函数开始
+/// 调用 `nk_tree_xxx_pop_xxx()` 函数结束。 Each starting functions takes a title label
 /// and optionally an image to be displayed and the initial collapse state from
 /// the nk_collapse_states section.
 ///
@@ -2525,11 +2520,11 @@ NK_API void nk_group_scrolled_end(struct nk_context*);
 /// nk_tree_state_image_push    | Start a collapsable UI section with image and label header and external state management
 /// nk_tree_state_pop           | Ends a collapsabale UI section
 ///
-/// #### nk_tree_type
+/// #### nk_tree_type 树的类型
 /// Flag            | 描述
 /// ----------------|----------------------------------------
-/// NK_TREE_NODE    | Highlighted tree header to mark a collapsable UI section
-/// NK_TREE_TAB     | Non-highighted tree header closer to tree representations
+/// NK_TREE_NODE    | 为 可折叠的UI部分 高亮显示标题
+/// NK_TREE_TAB     | 不高亮显示以更接近树的结构
 */
 /*/// #### nk_tree_push
 /// Starts a collapsable UI section with internal state management
@@ -2545,10 +2540,10 @@ NK_API void nk_group_scrolled_end(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
-/// __type__    | Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
-/// __title__   | Label printed in the tree header
-/// __state__   | Initial tree state value out of nk_collapse_states
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __type__    | 上边的两种树的类型 Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
+/// __title__   | 在树的开头显示的标题
+/// __state__   | 初始的树的展开状态 使用枚举类型 nk_collapse_states（ nk_false 或 nk_true ）表示
 ///
 /// Returns `true(1)` if visible and fillable with widgets or `false(0)` otherwise
 */
@@ -2561,11 +2556,11 @@ NK_API void nk_group_scrolled_end(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
-/// __type__    | Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
-/// __title__   | Label printed in the tree header
-/// __state__   | Initial tree state value out of nk_collapse_states
-/// __id__      | Loop counter index if this function is called in a loop
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __type__    | 上边的两种树的类型 Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
+/// __title__   | 在树的开头显示的标题
+/// __state__   | 初始的树的展开状态 使用枚举类型 nk_collapse_states（ nk_false 或 nk_true ）表示
+/// __id__      | 如果这个函数在循环中使用，这里填写循环索引 Loop counter index if this function is called in a loop
 ///
 /// Returns `true(1)` if visible and fillable with widgets or `false(0)` otherwise
 */
@@ -2579,10 +2574,10 @@ NK_API void nk_group_scrolled_end(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
-/// __type__    | Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
-/// __title__   | Label printed in the tree header
-/// __state__   | Initial tree state value out of nk_collapse_states
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __type__    | 上边的两种树的类型 Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
+/// __title__   | 在树的开头显示的标题
+/// __state__   | 初始的树的展开状态 使用枚举类型 nk_collapse_states（ nk_false 或 nk_true ）表示
 /// __hash__    | Memory block or string to generate the ID from
 /// __len__     | Size of passed memory block or string in __hash__
 /// __seed__    | Seeding value if this function is called in a loop or default to `0`
@@ -2604,11 +2599,11 @@ NK_API int nk_tree_push_hashed(struct nk_context*, enum nk_tree_type, const char
 //
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
-/// __type__    | Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
-/// __img__     | Image to display inside the header on the left of the label
-/// __title__   | Label printed in the tree header
-/// __state__   | Initial tree state value out of nk_collapse_states
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __type__    | 上边的两种树的类型 Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
+/// __img__     | 标签开头左边显示的图片
+/// __title__   | 在树的开头显示的标题
+/// __state__   | 初始的树的展开状态 使用枚举类型 nk_collapse_states（ nk_false 或 nk_true ）表示
 ///
 /// Returns `true(1)` if visible and fillable with widgets or `false(0)` otherwise
 */
@@ -2623,12 +2618,12 @@ NK_API int nk_tree_push_hashed(struct nk_context*, enum nk_tree_type, const char
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
-/// __type__    | Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
-/// __img__     | Image to display inside the header on the left of the label
-/// __title__   | Label printed in the tree header
-/// __state__   | Initial tree state value out of nk_collapse_states
-/// __id__      | Loop counter index if this function is called in a loop
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __type__    | 上边的两种树的类型 Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
+/// __img__     | 标签开头左边显示的图片
+/// __title__   | 在树的开头显示的标题
+/// __state__   | 初始的树的展开状态 使用枚举类型 nk_collapse_states（ nk_false 或 nk_true ）表示
+/// __id__      | 如果这个函数在循环中使用，这里填写循环索引 Loop counter index if this function is called in a loop
 ///
 /// Returns `true(1)` if visible and fillable with widgets or `false(0)` otherwise
 */
@@ -2642,11 +2637,11 @@ NK_API int nk_tree_push_hashed(struct nk_context*, enum nk_tree_type, const char
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct
-/// __type__    | Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
-/// __img__     | Image to display inside the header on the left of the label
-/// __title__   | Label printed in the tree header
-/// __state__   | Initial tree state value out of nk_collapse_states
+/// __ctx__     | 指向 `nk_context` 结构体
+/// __type__    | 上边的两种树的类型 Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
+/// __img__     | 标签开头左边显示的图片
+/// __title__   | 在树的开头显示的标题
+/// __state__   | 初始的树的展开状态 使用枚举类型 nk_collapse_states（ nk_false 或 nk_true ）表示
 /// __hash__    | Memory block or string to generate the ID from
 /// __len__     | Size of passed memory block or string in __hash__
 /// __seed__    | Seeding value if this function is called in a loop or default to `0`
@@ -2662,7 +2657,7 @@ NK_API int nk_tree_image_push_hashed(struct nk_context*, enum nk_tree_type, stru
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after calling `nk_tree_xxx_push_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after calling `nk_tree_xxx_push_xxx`
 */
 NK_API void nk_tree_pop(struct nk_context*);
 /*/// #### nk_tree_state_push
@@ -2673,9 +2668,9 @@ NK_API void nk_tree_pop(struct nk_context*);
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after calling `nk_tree_xxx_push_xxx`
-/// __type__    | Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
-/// __title__   | Label printed in the tree header
+/// __ctx__     | 指向 `nk_context` 结构体 after calling `nk_tree_xxx_push_xxx`
+/// __type__    | 上边的两种树的类型 Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
+/// __title__   | 在树的开头显示的标题
 /// __state__   | Persistent state to update
 ///
 /// Returns `true(1)` if visible and fillable with widgets or `false(0)` otherwise
@@ -2689,10 +2684,10 @@ NK_API int nk_tree_state_push(struct nk_context*, enum nk_tree_type, const char 
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after calling `nk_tree_xxx_push_xxx`
-/// __img__     | Image to display inside the header on the left of the label
-/// __type__    | Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
-/// __title__   | Label printed in the tree header
+/// __ctx__     | 指向 `nk_context` 结构体 after calling `nk_tree_xxx_push_xxx`
+/// __img__     | 标签开头左边显示的图片
+/// __type__    | 上边的两种树的类型 Value from the nk_tree_type section to visually mark a tree node header as either a collapseable UI section or tree node
+/// __title__   | 在树的开头显示的标题
 /// __state__   | Persistent state to update
 ///
 /// Returns `true(1)` if visible and fillable with widgets or `false(0)` otherwise
@@ -2706,7 +2701,7 @@ NK_API int nk_tree_state_image_push(struct nk_context*, enum nk_tree_type, struc
 ///
 /// 参数   | 描述
 /// ------------|-----------------------------------------------------------
-/// __ctx__     | Must point to an previously initialized `nk_context` struct after calling `nk_tree_xxx_push_xxx`
+/// __ctx__     | 指向 `nk_context` 结构体 after calling `nk_tree_xxx_push_xxx`
 */
 NK_API void nk_tree_state_pop(struct nk_context*);
 
