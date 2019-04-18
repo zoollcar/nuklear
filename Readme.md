@@ -1,3 +1,6 @@
+# 不再维护说明
+本汉化项目不再维护，望意愿接管者，请联系我
+
 # Nuklear 中文汉化计划
 
 这是 [vurtun/nuklear](https://github.com/vurtun/nuklear) 的中文版本
